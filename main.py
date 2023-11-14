@@ -25,6 +25,7 @@ while True:
     elif (choice == "2"):
         #READ EMAIL
         readEmail(EMAIL, PASSWORD, HOST, RECV_PORT)
+
     elif (choice == "3"):
         exit(0)
 
