@@ -27,8 +27,4 @@ while True:
         readEmail(EMAIL, PASSWORD, HOST, RECV_PORT)
     elif (choice == "3"):
         exit(0)
-        #huhu
-        #hehe
 
-        #haha
-        
