@@ -56,7 +56,7 @@ def sendEmail(username, emailFrom, host, port):
     elif (attachFiles == "2"): break;
     else: print("Lựa chọn không hợp lệ, bạn hãy nhập lại")
 
-  #DATA 
+  #DATA
   dataSend = 'DATA' + '\r\n'
   client.send(dataSend.encode())
   recv4 = client.recv(1024)
