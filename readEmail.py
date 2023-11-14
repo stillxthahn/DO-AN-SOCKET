@@ -58,8 +58,5 @@ def readEmail(username, password, host, port):
   data = client.recv(1024)
   data = data.decode()
   print(f"Nội dung email của email thứ {choice}: ", data)
-  
+
   client.close()
-
-
-
