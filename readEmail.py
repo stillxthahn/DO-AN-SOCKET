@@ -1,6 +1,7 @@
 import socket
 from listreadEmail import listreadEmail
 from load_email_json import load_email_json
+from Recv_list import output_receive_list
 
 def readEmail(username, password, host, port):
   #CREATE SOCKET OBJECT AND CONNECT TO SERVER
@@ -54,6 +55,7 @@ def readEmail(username, password, host, port):
   list = listreadEmail(uidlData)
   print(list)
   load_email_json(client, list)
+  output_receive_list()
 
   choice = input("Bạn muốn đọc Email thứ mấy: ")
   retrCommand = f"RETR {choice}\r\n"
