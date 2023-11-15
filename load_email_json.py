@@ -21,6 +21,5 @@ def load_email_json(client, List):
             dataList[6] = dataList[6][9:]
             data = { 'status' : "0", "from" : dataList[5], "subject" : dataList[6]}
             feeds.append(data)
-        
+
         json.dump(feeds, f)
-        
