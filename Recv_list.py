@@ -2,7 +2,6 @@ from readjson import read_Filejson
 
 def output_receive_list():
     listjson = read_Filejson()
-    print(listjson)
     for i in range(len(listjson)):
         print(i+1, end=' ')
         if listjson[i]["status"] != 1:

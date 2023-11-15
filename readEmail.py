@@ -22,38 +22,32 @@ def readEmail(username, password, host, port):
   client.send(capaCommand.encode())
   recv1 = client.recv(1024)
   recv1 = recv1.decode()
-  print(recv1)
 
   userCommand = f"USER {username}\r\n"
   client.send(userCommand.encode())
   recv2 = client.recv(1024)
   recv2 = recv2.decode()
-  print(recv2)
 
   passCommand = f"PASS {password}\r\n"
   client.send(passCommand.encode())
   recv3 = client.recv(1024)
   recv3 = recv3.decode()
-  print(recv3)
 
   statCommand = "STAT\r\n"
   client.send(statCommand.encode())
   recv4 = client.recv(1024)
   recv4 = recv4.decode()
-  print(recv4)
 
   listCommand = "LIST\r\n"
   client.send(listCommand.encode())
   listData = client.recv(1024)
   listData = listData.decode()
-  print(listData)
 
   uidlCommand = "UIDL\r\n"
   client.send(uidlCommand.encode())
   uidlData = client.recv(1024)
   uidlData = uidlData.decode()
   list = listreadEmail(uidlData)
-  print(list)
   load_email_json(client, list)
   output_receive_list()
 
