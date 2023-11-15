@@ -7,6 +7,7 @@ def displayEmail_Infor(LIST):
 '''
 import os
 import json
+
 def load_email_json(client, List):
     feeds = []
     with open("Email_Infor.json", mode='w', encoding='utf-8') as f:
@@ -17,9 +18,33 @@ def load_email_json(client, List):
             data = client.recv(1024)
             data = data.decode()
             dataList = data.split('\r\n')
-            dataList[5] = dataList[5][6:]
-            dataList[6] = dataList[6][9:]
-            data = { 'status' : "0", "from" : dataList[5], "subject" : dataList[6]}
+            CONTENT = ''
+            TO = ''
+            FROM = ''
+            DATE = ''
+            SUBJECT = ''
+            index_Content = 0
+            for j in range(0, len(dataList)):
+                if index_Content == 0:
+                    if dataList[j][0:2] == 'To':
+                        TO = dataList[j][4:]
+                    if dataList[j][0:4] == 'From':
+                        FROM = dataList[j][6:]
+                    if dataList[j][0:7] == 'Subject':
+                        SUBJECT = dataList[j][9:]
+                        index_Content = j
+                        break
+                    if dataList[j][0:4] == 'Date':
+                        DATE = dataList[j][6:]
+            for i in range(index_Content + 1, len(dataList) - 2):
+                if dataList[i][0:7] == 'Content':
+                    continue
+                #if dataList[i] == '\r\n':
+                    #continue
+                CONTENT = CONTENT + dataList[i]
+                
+            data = {'status' : "0", 'date' : DATE, 'from' : FROM, 'to' : TO, 'subject' : SUBJECT, 'content' : CONTENT}
             feeds.append(data)
-
+        
         json.dump(feeds, f)
+        
