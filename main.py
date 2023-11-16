@@ -1,5 +1,5 @@
 from readConfig import readConfig
-from sendEmail import sendEmail
+from send_email import send_email
 from readEmail import readEmail
 #READ CONFIG FILE
 data = readConfig()
@@ -21,7 +21,7 @@ while True:
     choice = input("Bạn chọn: ")
     if (choice == "1"):
         #SEND EMAIL
-        sendEmail(USERNAME, EMAIL, HOST, SEND_PORT)
+        send_email(USERNAME, EMAIL, HOST, SEND_PORT)
     elif (choice == "2"):
         #READ EMAIL
         readEmail(EMAIL, PASSWORD, HOST, RECV_PORT)
