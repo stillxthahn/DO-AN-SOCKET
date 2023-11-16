@@ -53,15 +53,15 @@ def readEmail(username, password, host, port):
   uidlData = uidlData.decode()
   list = listreadEmail(uidlData)
   load_email_json(client, list)
-  list_json = return_json()
-  output_receive_list(list_json)
+  # list_json = return_json()
+  # output_receive_list(list_json)
 
 
 
   choice = input("Bạn muốn đọc Email thứ mấy: ")
   retrCommand = f"RETR {choice}\r\n"
-  if update_status(list_json, choice):
-    update_read(list_json)
+  # if update_status(list_json, choice):
+  #   update_read(list_json)
   print(retrCommand)
   client.send(retrCommand.encode())
   data = client.recv(1024)

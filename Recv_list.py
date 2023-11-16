@@ -1,11 +1,11 @@
-from readjson import read_Filejson
+from read_json_file import read_json_file
 import json
 
 def return_json():
-    listjson = read_Filejson()
+    listjson = read_json_file()
     return listjson
 def output_receive_list(listjson):
-    listjson = read_Filejson()
+    listjson = read_json_file()
     for i in range(len(listjson)):
         print(i+1, end=' ')
         if listjson[i]["status"] != True:

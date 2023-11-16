@@ -7,9 +7,16 @@ def displayEmail_Infor(LIST):
 '''
 import os
 import json
-
+from read_json_file import read_json_file
 def load_email_json(client, List):
     feeds = []
+    
+    print(existing_data_json)
+    print("JSON: ", existing_data_json)
+    with open("Email_Infor.json", mode='w', encoding='utf-8') as f:
+        existing_data = existing_data.join(f.read())
+    print(existing_data)
+    
     with open("Email_Infor.json", mode='w', encoding='utf-8') as f:
         for i in range(1, len(List) + 1):
             retrCommand = f"RETR {i}\r\n"
@@ -42,9 +49,6 @@ def load_email_json(client, List):
                 #if dataList[i] == '\r\n':
                     #continue
                 CONTENT = CONTENT + dataList[i]
-                
             data = {'status' : "0", 'date' : DATE, 'from' : FROM, 'to' : TO, 'subject' : SUBJECT, 'content' : CONTENT}
-            feeds.append(data)
-        
         json.dump(feeds, f)
         
