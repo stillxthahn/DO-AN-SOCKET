@@ -2,7 +2,7 @@ from read_json_file import read_json_file
 import json
 
 def return_json():
-    listjson = read_json_file()
+    listjson = read_json_file('Email_Infor.json')
     return listjson
 def output_receive_list(listjson):
     listjson = read_json_file()
@@ -27,4 +27,3 @@ def update_status(listjson, choice):
 def update_read(listjson):
     with open('Email_Infor.json', 'w') as file:
         json.dump(listjson, file, indent=2)
-

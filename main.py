@@ -1,8 +1,8 @@
-from readConfig import readConfig
+from read_json_file import read_json_file
 from send_email import send_email
 from readEmail import readEmail
 #READ CONFIG FILE
-data = readConfig()
+data = read_json_file("config.json")
 USERNAME = data["Username"]
 EMAIL = data["Email"]
 PASSWORD = data["Password"]

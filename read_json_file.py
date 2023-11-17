@@ -1,6 +1,6 @@
 import json
-def read_json_file():
-    with open('Email_Infor.json', 'r') as filejson:
-        listdata = json.loads(filejson.read())
+def read_json_file(filename):
+    with open(filename, 'r') as f:
+        listdata = json.loads(f.read())
     return listdata
 #thiecs
