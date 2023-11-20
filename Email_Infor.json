@@ -1,1 +1,27 @@
-[{"status": "0", "from": "Mang may tinh <example@example.com>", "subject": "test"}, {"status": "0", "from": "Mang may tinh <example@example.com>", "subject": "ABC"}, {"status": "0", "from": "Mang may tinh <example@example.com>", "subject": "ABC"}, {"status": "0", "from": "Mang may tinh <example@example.com>", "subject": "ahihi"}, {"status": "0", "from": "Mang may tinh <example@example.com>", "subject": "ahihi"}]
+[
+    {
+        "status": "0",
+        "from": "Mang may tinh <example@example.com>",
+        "subject": "test"
+    },
+    {
+        "status": "0",
+        "from": "Mang may tinh <example@example.com>",
+        "subject": "ABC"
+    },
+    {
+        "status": "0",
+        "from": "Mang may tinh <example@example.com>",
+        "subject": "ABC"
+    },
+    {
+        "status": "0",
+        "from": "Mang may tinh <example@example.com>",
+        "subject": "ahihi"
+    },
+    {
+        "status": "0",
+        "from": "Mang may tinh <example@example.com>",
+        "subject": "ahihi"
+    }
+]

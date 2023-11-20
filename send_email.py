@@ -1,7 +1,11 @@
 import socket
 import uuid
 import time
-from body_format_attachment import body_format_attachment
+from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
+from email.mime.text import MIMEText
+import mimetypes
+import os
 
 def send_command(client, command):
   try:
@@ -11,6 +15,8 @@ def send_command(client, command):
   except Exception as e:
     print(f"Lỗi: {e}")
     return ""
+
+
 def input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file_path):
   print("Đây là thông tin soạn email: (nếu không điền vui lòng nhấn enter để bỏ qua)")
   to_list_str = input("To: ")
@@ -55,17 +61,36 @@ def body_format(tos_list, ccs_list, username, emailFrom, subject, content):
     unique_id = uuid.uuid4()
     named_tuple = time.localtime()
     local_time = time.strftime("%a, %d %b %Y %H:%M:%S", named_tuple)
-    messageID = f"Message ID: {unique_id}@example.com\r\n"
+    messageID = f"Message-ID: {unique_id}@example.com\r\n"
     date = f"Date: {local_time} +0700\r\n\r\n"
-    to = f"""To: {",".join(tos_list)}\r\n"""
-    cc = f"""Cc: {",".join(ccs_list)}\r\n"""
-    from_ = f"""From: {username} <{emailFrom}>\r\n"""
-    subject = f"""Subject: {"".join(subject)}\r\n\r\n"""
-    content = f"""{"".join(content)}\r\n"""
+    to = f"To: {",".join(tos_list)}\r\n"
+    cc = f"Cc: {",".join(ccs_list)}\r\n"
+    from_ = f"From: {username} <{emailFrom}>\r\n"
+    subject = f"Subject: {"".join(subject)}\r\n\r\n"
+    content = f"{"".join(content)}\r\n"
     endMSG = ".\r\n"
     return messageID + date + to + cc + from_ + subject + content + endMSG
 
+def body_format_attachment(client, to, username, emailfrom, subject, content, num_files, file_path):
+  msg = MIMEMultipart()
+  local_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
+  msg['Message-ID'] = f"{uuid.uuid4()}@example.com"
+  msg['Date'] = f"{local_time} +0700"
+  msg['To'] = to
+  msg['From'] = f"{username} <{emailfrom}>"
+  msg['Subject'] = subject
+  msg.attach(MIMEText(content, 'plain'))
+  for path in file_path:
+    with open(path, 'rb') as attachment:
+      attachment_part = MIMEApplication(attachment.read())
+      file_type = mimetypes.guess_type(path)
+      file_name = os.path.basename(path)
+      attachment_part.set_type(str(file_type[0]), header='Content-Type')
+      attachment_part.add_header("Content-Disposition", "attachment", filename=os.path.splitext(file_name)[0])
+      msg.attach(attachment_part)
+  return msg.as_bytes()
 
+  
 def send_email(username, emailFrom, host, port):
   #CREATE SOCKET OBJECT AND CONNECT TO SERVER
   client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -97,105 +122,9 @@ def send_email(username, emailFrom, host, port):
     body = body_format(tos_list, ccs_list, username, emailFrom, subject, content)
     send_command(client, body)
   else:
-    body_attachment = body_format_attachment(client, ",".join(tos_list), "".join(subject), "".join(content), num_files[0], file_path)
+    body_attachment = body_format_attachment(client, ",".join(tos_list), username, emailFrom, "".join(subject), "".join(content), num_files[0], file_path)
     client.send(body_attachment)
     send_command(client, "\r\n.\r\n")
   print("Đã gửi email thành công")
   client.close()
 
-
-
-
-
-# import socket
-# import uuid
-# import time
-# def sendEmail(username, emailFrom, host, port):
-#   #CREATE SOCKET OBJECT AND CONNECT TO SERVER
-#   client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#   server_address = (host, port)
-#   client.connect(server_address)
-
-#   #SERVER RESPONSE AFTER CONNECTION
-#   recv = client.recv(1024)
-#   recv = recv.decode()
-
-#   #EHLO COMMAND
-#   heloCommand = 'EHLO [' + host + ']\r\n'
-#   client.send(heloCommand.encode())
-#   recv1 = client.recv(1024)
-#   recv1 = recv1.decode()
-
-#   #MAIL FROM
-#   mailFrom = f"MAIL FROM:<{emailFrom}>\r\n"
-#   client.send(mailFrom.encode())
-#   recv2 = client.recv(1024)
-#   recv2 = recv2.decode()
-
-#   #INPUT DATA
-#   #INPUT RECEIVE EMAILS
-#   print("Đây là thông tin soạn email: (nếu không điền vui lòng nhấn enter để bỏ qua)")
-#   to_list_str = input("To: ")
-#   tos_list = to_list_str.split(", ")
-#   # tra ra 1 mang gom cac email -> lap qua cac email
-#   cc_list_str = input("CC: ")
-#   ccs_list = cc_list_str.split(", ")
-#   bcc_list_str = input("BCC: ")
-#   bccs_list = bcc_list_str.split(", ")
-
-#   for to in tos_list:
-#     rcptTo = f"RCPT TO:{to}\r\n"
-#     client.send(rcptTo.encode())
-#     recv3 = client.recv(1024)
-#     recv3 = recv3.decode()
-#   #for ccs in ccs_list:
-#   #for bccs in bccs_list:
-
-#   #INPUT SUBJECT AND CONTENT
-#   subject = input("Subject: ")
-#   content = input("Content: ")
-
-#   #INPUT FILES ATTACHED
-#   while True:
-#     attachFiles = input("Có gửi kèm file (1. có, 2. không): ")
-#     if (attachFiles == "1"):
-#       numberofFiles = input("Số lượng file muốn gửi: ")
-#       #for statement
-#       break
-#     elif (attachFiles == "2"): break;
-#     else: print("Lựa chọn không hợp lệ, bạn hãy nhập lại")
-
-#   #DATA
-#   dataSend = 'DATA' + '\r\n'
-#   client.send(dataSend.encode())
-#   recv4 = client.recv(1024)
-#   recv4 = recv4.decode()
-#   #print("Message after RCPT TO command:" + recv4)
-
-#   # INPUTING DATA
-#   unique_id = uuid.uuid4()
-#   named_tuple = time.localtime()
-#   local_time = time.strftime("%a, %d %b %Y %H:%M:%S", named_tuple)
-
-#   MessageID = f"Message ID: {unique_id}@example.com\r\n"
-#   Date = f"Date: {local_time} +0700\r\n\r\n"
-#   To = f"To: {to_list_str}\r\n"
-#   From = f"From: {username} <{emailFrom}>\r\n"
-#   Subject = f"Subject: {subject}\r\n\r\n"
-#   Content = f"{content}\r\n"
-#   endMSG = ".\r\n"
-
-#   Message = MessageID + Date + To + From + Subject + Content + endMSG
-#   client.send(Message.encode())
-#   # client.send(MessageID.encode())
-#   # client.send(Date.encode())
-#   # client.send(To.encode())
-#   # client.send(From.encode())
-#   # client.send(Subject.encode())
-#   # client.send(Content.encode())
-#   # client.send(endMSG.encode())
-
-#   recv5 = client.recv(1024)
-#   recv5 = recv5.decode()
-#   print("Đã gửi email thành công")
-#   client.close()

@@ -1,6 +1,6 @@
 from read_json_file import read_json_file
 from send_email import send_email
-from readEmail import readEmail
+from read_email import read_email
 #READ CONFIG FILE
 data = read_json_file("config.json")
 USERNAME = data["Username"]
@@ -24,6 +24,6 @@ while True:
         send_email(USERNAME, EMAIL, HOST, SEND_PORT)
     elif (choice == "2"):
         #READ EMAIL
-        readEmail(EMAIL, PASSWORD, HOST, RECV_PORT)
+        read_email(EMAIL, PASSWORD, HOST, RECV_PORT)
     elif (choice == "3"):
         exit(0)
