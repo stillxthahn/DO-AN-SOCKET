@@ -4,17 +4,13 @@ from read_json_file import read_json_file
 
 def parse_email(data):
   lines = data.split('\n')
-  content_type = ""
   boundary = ""
-  mime_version = ""
   message_id = ""
   date = ""
   tos = []
   _from = ""
   subject = ""
-  attachment_data = []
-  in_attachment = False
-  in_content = False
+  attachment_arr = []
   content = ""
   start_idx_attach = 0
   if (lines[0].startswith("Content-Type: multipart/mixed") == 1):
@@ -38,13 +34,15 @@ def parse_email(data):
             break
           content = content + lines[k]
       elif lines[j].startswith("Content-Disposition: attachment"):
-        data_attachment = ""
-        file_name = ""
+        attachment_data = ""
+        file_name = lines[j][lines[j].find('"') + 1:len(lines[j]) + 1]
         for k in range(j + 2, len(lines)):
           if boundary in lines[k]:
             break
-          data_attachment = data_attachment + lines[k]
-        attachment_data.append(data_attachment.strip())
-    print("ID:", message_id, "Date:",date, "To:", tos, "From:",_from, "Subject:", subject, "Content:", content, "Attachment:", attachment_data)
-    return {message_id, dates, tos, _from, subject, content, attachment_data}
+          attachment_data = attachment_data + lines[k]
+        attachment_data.strip()
+        attachment = {"name": file_name, "data": attachment_data}
+        attachment_arr.append(attachment)
+    print("ID:", message_id, "Date:",date, "To:", tos, "From:",_from, "Subject:", subject, "Content:", content, "Attachment:", attachment_arr)
+    return {"ID": message_id, "date": date, "tos": tos, "from": _from, "subject": subject, "content": content, "attachment": attachment_data}
     
