@@ -63,9 +63,9 @@ def save_email(data, filename, filter):
 def get_email(client, list):
   json_filter = read_json_file('filter.json')
   folder_inbox_path = os.path.join(os.getcwd(),"local_mailbox", "Inbox")
-  for i in range(1, len(list)):
+  for i in range(1, len(list) + 1):
       data_server = send_command(client, f"RETR {i}\r\n")
-      if (os.path.isfile(os.path.join(folder_inbox_path, list[i]))): 
+      if (os.path.isfile(os.path.join(folder_inbox_path, list[i - 1]))): 
         continue
-      save_email(data_server, list[i], json_filter)
+      save_email(data_server, list[i - 1], json_filter)
 
