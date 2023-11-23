@@ -1,7 +1,6 @@
 import os
 from send_email import send_command
 from read_json_file import read_json_file
-
 def parse_email(data):
   lines = data.split('\n')
   boundary = ""
@@ -43,5 +42,30 @@ def parse_email(data):
         attachment_data.strip()
         attachment = {"name": file_name, "data": attachment_data}
         attachment_arr.append(attachment)
-    return {"ID": message_id, "date": date, "tos": tos, "from": _from, "subject": subject, "content": content, "attachment": attachment_arr}
+    print("ID:", message_id, "Date:",date, "To:", tos, "From:",_from, "Subject:", subject, "Content:", content, "Attachment:", attachment_arr)
+    return {"ID": message_id, "date": date, "tos": tos, "from": _from, "subject": subject, "content": content, "attachment": attachment_data}
     
+def save_file(data, filename, foldername):
+  file_path = os.path.join(os.getcwd(),"local_mailbox", foldername, filename)
+  with open(file_path, "w") as f:
+    f.write(data)
+
+def save_email(data, filename, filter):
+  data_parse = parse_email(data)
+  save_file(data, filename, "Inbox")
+  for object in filter:
+    for category in object["type"]:
+      if category in data:
+        for value in category["value"]:
+          if (data_parse[category["type"]] == value):
+            save_file(data, filename, category["folder"])
+
+def get_email(client, list):
+  json_filter = read_json_file('filter.json')
+  folder_inbox_path = os.path.join(os.getcwd(),"local_mailbox", "Inbox")
+  for i in range(1, len(list)):
+      data_server = send_command(client, f"RETR {i}\r\n")
+      if (os.path.isfile(os.path.join(folder_inbox_path, list[i]))): 
+        continue
+      save_email(data_server, list[i], json_filter)
+

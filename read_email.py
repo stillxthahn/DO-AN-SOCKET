@@ -2,6 +2,7 @@ import socket
 from listreadEmail import listreadEmail
 from load_email_json import load_email_json
 from send_email import send_command
+from get_email import get_email
 #from save_email import save_email
 def read_email(username, password, host, port):
   #CREATE SOCKET OBJECT AND CONNECT TO SERVER
@@ -28,7 +29,7 @@ def read_email(username, password, host, port):
   uidl_data = send_command(client, "UIDL\r\n")
   print(uidl_data)
   list = listreadEmail(uidl_data)
-  #save_email(client, list)
+  save_email(client, list)
   #load_email_json(client, list)
 
   choice = input("Bạn muốn đọc Email thứ mấy: ")
