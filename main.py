@@ -27,3 +27,4 @@ while True:
         read_email(EMAIL, PASSWORD, HOST, RECV_PORT)
     elif (choice == "3"):
         exit(0)
+#ALO

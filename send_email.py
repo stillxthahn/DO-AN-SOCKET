@@ -90,7 +90,7 @@ def body_format_attachment(to, username, emailfrom, subject, content, file_path)
       msg.attach(attachment_part)
   return msg.as_bytes()
 
-  
+
 def send_email(username, emailFrom, host, port):
   #CREATE SOCKET OBJECT AND CONNECT TO SERVER
   client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -114,8 +114,10 @@ def send_email(username, emailFrom, host, port):
   input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file_path)
   for to in tos_list:
     send_command(client, f"RCPT TO:<{to}>\r\n")
-  # for cc in ccs_list:
-  #   send_command(client, f"RCPT TO:<{cc}>\r\n")
+  for cc in ccs_list:
+    send_command(client, f"RCPT TO:<{cc}>\r\n")
+  for bcc in bccs_list:
+    send_command(client, f"RCPT TO:<{bcc}>\r\n")
   send_command(client, f"DATA\r\n")
   # SENDING-DATA
   if (len(num_files) == 0  or int(num_files[0]) == 0):
@@ -127,4 +129,3 @@ def send_email(username, emailFrom, host, port):
     send_command(client, "\r\n.\r\n")
   print("Đã gửi email thành công")
   client.close()
-
