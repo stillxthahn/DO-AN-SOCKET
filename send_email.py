@@ -63,11 +63,11 @@ def body_format(tos_list, ccs_list, username, emailFrom, subject, content):
     local_time = time.strftime("%a, %d %b %Y %H:%M:%S", named_tuple)
     messageID = f"Message-ID: {unique_id}@example.com\r\n"
     date = f"Date: {local_time} +0700\r\n\r\n"
-    to = f"To: {",".join(tos_list)}\r\n"
-    cc = f"Cc: {",".join(ccs_list)}\r\n"
+    to = f"""To: {",".join(tos_list)}\r\n"""
+    cc = f"""Cc: {",".join(ccs_list)}\r\n"""
     from_ = f"From: {username} <{emailFrom}>\r\n"
-    subject = f"Subject: {"".join(subject)}\r\n\r\n"
-    content = f"{"".join(content)}\r\n"
+    subject = f"""Subject: {"".join(subject)}\r\n\r\n"""
+    content = f"""{"".join(content)}\r\n"""
     endMSG = ".\r\n"
     return messageID + date + to + cc + from_ + subject + content + endMSG
 
@@ -90,7 +90,7 @@ def body_format_attachment(client, to, username, emailfrom, subject, content, nu
       msg.attach(attachment_part)
   return msg.as_bytes()
 
-  
+
 def send_email(username, emailFrom, host, port):
   #CREATE SOCKET OBJECT AND CONNECT TO SERVER
   client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -114,8 +114,10 @@ def send_email(username, emailFrom, host, port):
   input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file_path)
   for to in tos_list:
     send_command(client, f"RCPT TO:<{to}>\r\n")
-  # for cc in ccs_list:
-  #   send_command(client, f"RCPT TO:<{cc}>\r\n")
+  for cc in ccs_list:
+    send_command(client, f"RCPT TO:<{cc}>\r\n")
+  for bcc in bccs_list:
+    send_command(client, f"RCPT TO:<{bcc}>\r\n")
   send_command(client, f"DATA\r\n")
   # SENDING-DATA
   if (len(num_files) == 0  or int(num_files[0]) == 0):
@@ -127,4 +129,3 @@ def send_email(username, emailFrom, host, port):
     send_command(client, "\r\n.\r\n")
   print("Đã gửi email thành công")
   client.close()
-
