@@ -29,7 +29,7 @@ def read_email(username, password, host, port):
   uidl_data = send_command(client, "UIDL\r\n")
   print(uidl_data)
   list = listreadEmail(uidl_data)
-  save_email(client, list)
+  get_email(client, list)
   #load_email_json(client, list)
 
   choice = input("Bạn muốn đọc Email thứ mấy: ")
