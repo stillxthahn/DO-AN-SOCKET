@@ -13,8 +13,7 @@ def parse_email(data):
   attachment_arr = []
   content = ""
   start_idx_attach = -1
-  #if (lines[0].startswith("Content-Type: multipart/mixed") == 1):
-    #boundary = lines[0][lines[0].find('"') + 1:len(lines[0]) - 1]
+
   for i in range(0, len(lines)):
     if (lines[i].startswith("Content-Type: multipart/mixed") == 1):
       boundary = lines[0][lines[0].find('"') + 1:len(lines[0]) - 1]
@@ -34,7 +33,7 @@ def parse_email(data):
       content = content + lines[i] + '\r\n'
     content = content[:-6]
     print("ID:", message_id, "Date:",date, "To:", tos, "From:",_from, "Subject:", subject, "Content:", content)
-    return {"ID": message_id, "date": date, "tos": tos, "from": _from, "subject": subject, "content": content}
+    return {"ID": message_id, "Date": date, "To": tos, "From": _from, "Subject": subject, "Content": content}
 
   else:
     for j in range(start_idx_attach, len(lines), 1):
@@ -54,26 +53,22 @@ def parse_email(data):
         attachment = {"name": file_name, "data": attachment_data}
         attachment_arr.append(attachment)
     print("ID:", message_id, "Date:",date, "To:", tos, "From:",_from, "Subject:", subject, "Content:", content, "Attachment:", attachment_arr)
-    return {"ID": message_id, "date": date, "tos": tos, "from": _from, "subject": subject, "content": content, "attachment": attachment_arr}
+    return {"ID": message_id, "Date": date, "To": tos, "From": _from, "Subject": subject, "Content": content, "Attachment": attachment_arr}
     
 def save_file(data, filename, foldername):
   file_path = os.path.join(os.getcwd(),"local_mailbox", foldername, filename)
   data.split('\r\n')
-  print("DATA:", data)
   with open(file_path, "w") as f:
     f.writelines(data)
 
 def save_email(data, filename, filter):
   data_parse = parse_email(data)
-  print(data)
-
   save_file(data, filename, "Inbox")
-  # for object in filter:
-  #   for category in object["type"]:
-  #     if category in data:
-  #       for value in category["value"]:
-  #         if (data_parse[category["type"]] == value):
-  #           save_file(data, filename, category["folder"])
+  for object in filter:
+    for category in object["type"]:
+      for value in object["value"]:
+        if (value in data_parse[category]):    
+          save_file(data, filename, object["folder"])
 
 def get_email(client, list):
   json_filter = read_json_file('filter.json')
