@@ -62,16 +62,16 @@ def body_format(tos_list, ccs_list, username, emailFrom, subject, content):
     named_tuple = time.localtime()
     local_time = time.strftime("%a, %d %b %Y %H:%M:%S", named_tuple)
     messageID = f"Message-ID: {unique_id}@example.com\r\n"
-    date = f"Date: {local_time} +0700\r\n\r\n"
-    to = f"To: {",".join(tos_list)}\r\n"
-    cc = f"Cc: {",".join(ccs_list)}\r\n"
-    from_ = f"From: {username} <{emailFrom}>\r\n"
-    subject = f"Subject: {"".join(subject)}\r\n\r\n"
-    content = f"{"".join(content)}\r\n"
+    date = f"Date: {local_time} +0700\r\n"
+    to = f"""To: {",".join(tos_list)}\r\n"""
+    cc = f"""Cc: {",".join(ccs_list)}\r\n"""
+    from_ = f"""From: {username} <{emailFrom}>\r\n"""
+    subject = f"""Subject: {"".join(subject)}\r\n\r\n"""
+    content = f"""{"".join(content)}\r\n"""
     endMSG = ".\r\n"
     return messageID + date + to + cc + from_ + subject + content + endMSG
 
-def body_format_attachment(client, to, username, emailfrom, subject, content, num_files, file_path):
+def body_format_attachment(to, username, emailfrom, subject, content, file_path):
   msg = MIMEMultipart()
   local_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
   msg['Message-ID'] = f"{uuid.uuid4()}@example.com"
