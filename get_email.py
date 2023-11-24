@@ -3,7 +3,6 @@ from send_email import send_command
 from read_json_file import read_json_file
 def parse_email(data):
   lines = data.split('\r\n')
-  lines = lines[1:]
   boundary = ""
   message_id = ""
   date = ""
@@ -32,7 +31,7 @@ def parse_email(data):
     for i in range(start_idx_attach, len(lines)):
       content = content + lines[i] + '\r\n'
     content = content[:-6]
-    print("ID:", message_id, "Date:",date, "To:", tos, "From:",_from, "Subject:", subject, "Content:", content)
+    #print("ID:", message_id, "Date:",date, "To:", tos, "From:",_from, "Subject:", subject, "Content:", content)
     return {"ID": message_id, "Date": date, "To": tos, "From": _from, "Subject": subject, "Content": content}
 
   else:
@@ -52,14 +51,16 @@ def parse_email(data):
         attachment_data.strip()
         attachment = {"name": file_name, "data": attachment_data}
         attachment_arr.append(attachment)
-    print("ID:", message_id, "Date:",date, "To:", tos, "From:",_from, "Subject:", subject, "Content:", content, "Attachment:", attachment_arr)
     return {"ID": message_id, "Date": date, "To": tos, "From": _from, "Subject": subject, "Content": content, "Attachment": attachment_arr}
     
 def save_file(data, filename, foldername):
   file_path = os.path.join(os.getcwd(),"local_mailbox", foldername, filename)
-  data.split('\r\n')
+  data_arr = data.splitlines()
   with open(file_path, "w") as f:
-    f.writelines(data)
+    for item in data_arr:
+      item = item + '\n'
+      f.write(item)
+
 
 def save_email(data, filename, filter):
   data_parse = parse_email(data)
@@ -77,6 +78,7 @@ def get_email(client, list):
       data_server = send_command(client, f"RETR {i}\r\n")
       if (os.path.isfile(os.path.join(folder_inbox_path, list[i - 1]))): 
         continue
+      data_server = data_server[data_server.find('\n') + 1:]
       save_email(data_server, list[i - 1], json_filter)
 
 # data = parse_email(data_file)
