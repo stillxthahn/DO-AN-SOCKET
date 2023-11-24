@@ -85,7 +85,7 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
     with open(path, 'rb') as attachment:
       attachment_part = MIMEApplication(attachment.read())
       file_type = mimetypes.guess_type(path)
-      file_name = path[path.rfind('/') + 1:len(path)]
+      file_name = path[path.rfind("\\") + 1:len(path)]
       attachment_part.set_type(str(file_type[0]), header='Content-Type')
       attachment_part.add_header("Content-Disposition", "attachment",filename=file_name)
       msg.attach(attachment_part)

@@ -27,7 +27,6 @@ def read_email(username, password, host, port):
 
   uidl_data = send_command(client, "UIDL\r\n")
   list = listreadEmail(uidl_data)
-  print(list)
   get_email(client, list)
 
   print("Đây là danh sách các folder trong mailbox của bạn: \r\n 1. Inbox \r\n 2. Project\r\n 3. Important \r\n 4. Work \r\n 5. Spam")
@@ -55,5 +54,5 @@ def read_email(username, password, host, port):
   elif (folder == '5'):
     output_receive_list("Spam")
     choice = input("Bạn muốn đọc Email thứ mấy: ")
-    read_chosen_file("Work", choice)
+    read_chosen_file("Spam", choice)
   client.close()
