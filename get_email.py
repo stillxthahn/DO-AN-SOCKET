@@ -7,6 +7,7 @@ def parse_email(data):
   message_id = ""
   date = ""
   tos = []
+  ccs = []
   _from = ""
   subject = ""
   attachment_arr = []
@@ -18,11 +19,14 @@ def parse_email(data):
       boundary = lines[0][lines[0].find('"') + 1:len(lines[0]) - 1]
     elif lines[i].startswith("Message-ID"): message_id = lines[i].split(": ", 1)[1]
     elif lines[i].startswith("Date"): date = lines[i].split(": ", 1)[1]
-    elif lines[i].startswith("To"): 
+    elif lines[i].startswith("To"):
       to = lines[i].split(": ", 1)[1]
       tos = to.split(',')
+    elif lines[i].startswith("Cc"):
+      cc = lines[i].split(": ", 1)[1]
+      ccs = cc.split(',')
     elif lines[i].startswith("From"): _from = lines[i].split(": ", 1)[1]
-    elif lines[i].startswith("Subject"): 
+    elif lines[i].startswith("Subject"):
       subject = (lines[i].split(": ", 1)[1]).strip()
     if subject != '' and lines[i] == '':
       start_idx_attach = i
@@ -32,7 +36,7 @@ def parse_email(data):
       content = content + lines[i] + '\r\n'
     content = content[:-6]
     #print("ID:", message_id, "Date:",date, "To:", tos, "From:",_from, "Subject:", subject, "Content:", content)
-    return {"ID": message_id, "Date": date, "To": tos, "From": _from, "Subject": subject, "Content": content}
+    return {"ID": message_id, "Date": date, "To": tos, "Cc": ccs, "From": _from, "Subject": subject, "Content": content}
 
   else:
     for j in range(start_idx_attach, len(lines), 1):
@@ -51,8 +55,8 @@ def parse_email(data):
         attachment_data.strip()
         attachment = {"name": file_name, "data": attachment_data}
         attachment_arr.append(attachment)
-    return {"ID": message_id, "Date": date, "To": tos, "From": _from, "Subject": subject, "Content": content, "Attachment": attachment_arr}
-    
+    return {"ID": message_id, "Date": date, "To": tos,"Cc": ccs, "From": _from, "Subject": subject, "Content": content, "Attachment": attachment_arr}
+
 def save_file(data, filename, foldername):
   file_path = os.path.join(os.getcwd(),"local_mailbox", foldername, filename)
   data_arr = data.splitlines()
@@ -68,7 +72,7 @@ def save_email(data, filename, filter):
   for object in filter:
     for category in object["type"]:
       for value in object["value"]:
-        if (value in data_parse[category]):    
+        if (value in data_parse[category]):
           save_file(data, filename, object["folder"])
 
 def get_email(client, list):
@@ -76,7 +80,7 @@ def get_email(client, list):
   folder_inbox_path = os.path.join(os.getcwd(),"local_mailbox", "Inbox")
   for i in range(1, len(list) + 1):
       data_server = send_command(client, f"RETR {i}\r\n")
-      if (os.path.isfile(os.path.join(folder_inbox_path, list[i - 1]))): 
+      if (os.path.isfile(os.path.join(folder_inbox_path, list[i - 1]))):
         continue
       data_server = data_server[data_server.find('\n') + 1:]
       save_email(data_server, list[i - 1], json_filter)
@@ -84,4 +88,4 @@ def get_email(client, list):
 # data = parse_email(data_file)
 # data["ID"]
 # Inbox -> file -> lay ID -> so ID vs json chua doc subject ...
-# chon 1 file -> 
+# chon 1 file ->

@@ -24,13 +24,15 @@ def input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file
   for to in tos:
     tos_list.append(to)
   cc_list_str = input("CC: ")
-  ccs = cc_list_str.split(", ")
-  for cc in ccs:
-    ccs_list.append(cc)
+  if (cc_list_str != ''):
+    ccs = cc_list_str.split(", ")
+    for cc in ccs:
+      ccs_list.append(cc)
   bcc_list_str = input("BCC: ")
-  bccs = bcc_list_str.split(", ")
-  for bcc in bccs:
-    bccs_list.append(bcc)
+  if (bcc_list_str != ''):
+    bccs = bcc_list_str.split(", ")
+    for bcc in bccs:
+      bccs_list.append(bcc)
   sub = input('Subject: ')
   subject.append(sub)
   subject = "".join(subject)
@@ -48,13 +50,8 @@ def input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file
       for num in range(1, num_files + 1):
         attachment_path = input(f"Nhập đường dẫn file đính kèm cho file {num}: ")
         file_path.append(attachment_path)
-      #"C:/Users/Admins/Downloads/img.jpg"
-      #"C:/Users/lxtha/Desktop/ATTACHMENT.txt"
-      #"C:/Users/lxtha/Downloads/ok.xls"
-      #"C:/Users/lxtha/Downloads/unikey43RC5-200929-win64.zip"
-      #send_attachment_file(client, "C:/Users/lxtha/Desktop/ATTACHMENT.txt")
       break
-    elif (attach_files == "2"): break;
+    elif (attach_files == "2"): break
     else: print("Lựa chọn không hợp lệ, bạn hãy nhập lại")
 
 def body_format(tos_list, ccs_list, username, emailFrom, subject, content):
@@ -64,7 +61,9 @@ def body_format(tos_list, ccs_list, username, emailFrom, subject, content):
     messageID = f"Message-ID: {unique_id}@example.com\r\n"
     date = f"Date: {local_time} +0700\r\n"
     to = f"""To: {",".join(tos_list)}\r\n"""
-    cc = f"""Cc: {",".join(ccs_list)}\r\n"""
+    cc = ''
+    if len(ccs_list):
+      cc = f"""Cc: {",".join(ccs_list)}\r\n"""
     from_ = f"""From: {username} <{emailFrom}>\r\n"""
     subject = f"""Subject: {"".join(subject)}\r\n\r\n"""
     content = f"""{"".join(content)}\r\n"""
@@ -77,7 +76,8 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
   msg['Message-ID'] = f"{uuid.uuid4()}@example.com"
   msg['Date'] = f"{local_time} +0700"
   msg['To'] = to
-  msg['Cc'] = cc
+  if cc != '' :
+    msg['Cc'] = cc
   msg['From'] = f"{username} <{emailfrom}>"
   msg['Subject'] = subject
   msg.attach(MIMEText(content, 'plain'))
@@ -85,7 +85,6 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
     with open(path, 'rb') as attachment:
       attachment_part = MIMEApplication(attachment.read())
       file_type = mimetypes.guess_type(path)
-      #C:/Users/lxtha/Desktop/ATTACHMENT.txt
       file_name = path[path.rfind('/') + 1:len(path)]
       attachment_part.set_type(str(file_type[0]), header='Content-Type')
       attachment_part.add_header("Content-Disposition", "attachment",filename=file_name)
