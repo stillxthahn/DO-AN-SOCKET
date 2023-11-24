@@ -71,12 +71,13 @@ def body_format(tos_list, ccs_list, username, emailFrom, subject, content):
     endMSG = ".\r\n"
     return messageID + date + to + cc + from_ + subject + content + endMSG
 
-def body_format_attachment(to, username, emailfrom, subject, content, file_path):
+def body_format_attachment(to, cc, username, emailfrom, subject, content, file_path):
   msg = MIMEMultipart()
   local_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
   msg['Message-ID'] = f"{uuid.uuid4()}@example.com"
   msg['Date'] = f"{local_time} +0700"
   msg['To'] = to
+  msg['Cc'] = cc
   msg['From'] = f"{username} <{emailfrom}>"
   msg['Subject'] = subject
   msg.attach(MIMEText(content, 'plain'))
@@ -84,9 +85,10 @@ def body_format_attachment(to, username, emailfrom, subject, content, file_path)
     with open(path, 'rb') as attachment:
       attachment_part = MIMEApplication(attachment.read())
       file_type = mimetypes.guess_type(path)
-      file_name = os.path.basename(path)
+      #C:/Users/lxtha/Desktop/ATTACHMENT.txt
+      file_name = path[path.rfind('/') + 1:len(path)]
       attachment_part.set_type(str(file_type[0]), header='Content-Type')
-      attachment_part.add_header("Content-Disposition", "attachment", filename=os.path.splitext(file_name)[0])
+      attachment_part.add_header("Content-Disposition", "attachment",filename=file_name)
       msg.attach(attachment_part)
   return msg.as_bytes()
 
@@ -124,7 +126,7 @@ def send_email(username, emailFrom, host, port):
     body = body_format(tos_list, ccs_list, username, emailFrom, subject, content)
     send_command(client, body)
   else:
-    body_attachment = body_format_attachment(client, ",".join(tos_list), username, emailFrom, "".join(subject), "".join(content), num_files[0], file_path)
+    body_attachment = body_format_attachment(",".join(tos_list), ",".join(ccs_list), username, emailFrom, "".join(subject), "".join(content), file_path)
     client.send(body_attachment)
     send_command(client, "\r\n.\r\n")
   print("Đã gửi email thành công")
