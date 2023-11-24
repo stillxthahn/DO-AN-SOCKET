@@ -19,15 +19,11 @@ def read_email(username, password, host, port):
   send_command(client, f"USER {username}\r\n")
   send_command(client, f"PASS {password}\r\n")
   state = send_command(client, "STAT\r\n")
-  print(state)
-  state_arr = state.split()
-  print(state_arr)
 
   listCommand = "LIST\r\n"
   list_data =  send_command(client, "LIST\r\n")
 
   uidl_data = send_command(client, "UIDL\r\n")
-  print(uidl_data)
   list = listreadEmail(uidl_data)
   get_email(client, list)
   #load_email_json(client, list)
@@ -38,10 +34,4 @@ def read_email(username, password, host, port):
   data = client.recv(1024)
   data = data.decode()
   print(f"Nội dung email của email thứ {choice}: ", data)
-  top = f"TOP {choice} 5\r\n"
-  client.send(top.encode())
-  topData = client.recv(1024)
-  topData = topData.decode()
-  print(topData)
-
   client.close()
