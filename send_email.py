@@ -5,7 +5,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 import mimetypes
-import os
 
 def send_command(client, command):
   try:
@@ -75,45 +74,26 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
   local_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
   msg['Message-ID'] = f"{uuid.uuid4()}@example.com"
   msg['Date'] = f"{local_time} +0700"
-  msg['To'] = to
+  msg['To'] = "".join(to)
   if cc != '' :
-    msg['Cc'] = cc
+    msg['Cc'] = "".join(cc)
   msg['From'] = f"{username} <{emailfrom}>"
-  msg['Subject'] = subject
-  msg.attach(MIMEText(content, 'plain'))
+  msg['Subject'] = "".join(subject)
+  msg.attach(MIMEText("".join(content), 'plain'))
   for path in file_path:
     with open(path, 'rb') as attachment:
       attachment_part = MIMEApplication(attachment.read())
-      #path = path.decode('utf-8')
       file_type = mimetypes.guess_type(path)
+      print(file_type)
       file_name = path[path.rfind("\\") + 1:len(path)]
       attachment_part.set_type(str(file_type[0]), header='Content-Type')
       attachment_part.add_header("Content-Disposition", "attachment",filename=file_name)
       msg.attach(attachment_part)
   return msg.as_bytes()
 
-#C:\Users\LENOVO\OneDrive\Máy tính\img.png
-def send_email(username, emailFrom, host, port):
-  #CREATE SOCKET OBJECT AND CONNECT TO SERVER
-  client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  server_address = (host, port)
-  try:
-    client.connect(server_address)
-    client.recv(1024).decode()
-  except Exception as e:
-     print(f"Lỗi: {e}")
-     return
-  tos_list = []
-  ccs_list = []
-  bccs_list = []
-  subject = []
-  content = []
-  num_files = []
-  file_path = []
-  #SERVER RESPONSE AFTER CONNECTION
+def send_data(client, host, username, emailFrom, tos_list, ccs_list, bccs_list, subject, content, num_files, file_path):
   send_command(client, f"EHLO [{host}]\r\n")
   send_command(client, f"MAIL FROM:<{emailFrom}>\r\n")
-  input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file_path)
   for to in tos_list:
     send_command(client, f"RCPT TO:<{to}>\r\n")
   for cc in ccs_list:
@@ -126,8 +106,45 @@ def send_email(username, emailFrom, host, port):
     body = body_format(tos_list, ccs_list, username, emailFrom, subject, content)
     send_command(client, body)
   else:
-    body_attachment = body_format_attachment(",".join(tos_list), ",".join(ccs_list), username, emailFrom, "".join(subject), "".join(content), file_path)
+    body_attachment = body_format_attachment(tos_list, ccs_list, username, emailFrom, subject, content, file_path)
     client.send(body_attachment)
     send_command(client, "\r\n.\r\n")
+
+def send_email(username, emailFrom, host, port):
+  client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  server_address = (host, port)
+  try:
+    client.connect(server_address)
+    client.recv(1024).decode()
+  except Exception as e:
+     print(f"Lỗi: {e}")
+     return
+  
+  tos_list = []
+  ccs_list = []
+  bccs_list = []
+  subject = []
+  content = []
+  num_files = []
+  file_path = []
+  # send_command(client, f"EHLO [{host}]\r\n")
+  # send_command(client, f"MAIL FROM:<{emailFrom}>\r\n")
+  input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file_path)
+  send_data(client, host, username, emailFrom, tos_list, ccs_list, bccs_list, subject, content, num_files, file_path)
+  # for to in tos_list:
+  #   send_command(client, f"RCPT TO:<{to}>\r\n")
+  # for cc in ccs_list:
+  #   send_command(client, f"RCPT TO:<{cc}>\r\n")
+  # for bcc in bccs_list:
+  #   send_command(client, f"RCPT TO:<{bcc}>\r\n")
+  # send_command(client, f"DATA\r\n")
+  # # SENDING-DATA
+  # if (len(num_files) == 0  or int(num_files[0]) == 0):
+  #   body = body_format(tos_list, ccs_list, username, emailFrom, subject, content)
+  #   send_command(client, body)
+  # else:
+  #   body_attachment = body_format_attachment(",".join(tos_list), ",".join(ccs_list), username, emailFrom, "".join(subject), "".join(content), file_path)
+  #   client.send(body_attachment)
+  #   send_command(client, "\r\n.\r\n")
   print("Đã gửi email thành công")
   client.close()
