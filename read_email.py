@@ -9,6 +9,7 @@ from Recv_list import update_status
 from Recv_list import folder_choice
 from Recv_list import get_valid_choice
 from Recv_list import getFiles_arr
+from get_email import parse_email
 #from save_email import save_email
 def read_email(username, password, host, port):
   #CREATE SOCKET OBJECT AND CONNECT TO SERVER
@@ -42,7 +43,15 @@ def read_email(username, password, host, port):
   print("len(files_arr): ",len(files_arr))
   choice = get_valid_choice(files_arr)
   email_data = read_chosen_file(foldername, choice)
-  print(f"Nội dung của email thứ {choice}: {email_data}")
+  data_parse = parse_email(email_data, '\n\n')
+
+  print(f"Nội dung của email thứ {choice}:")
+  print ("Date: ", data_parse['Date'])
+  print ("To: ", data_parse['To'])
+  print ("From: ",data_parse['From'])
+  print ("Subject: ", data_parse['Subject'])
+  print ("Content: ", data_parse['Content'])
+  update_status(foldername, choice)
   update_status(foldername, choice)
 
   client.close()
