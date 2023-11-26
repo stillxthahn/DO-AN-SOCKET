@@ -47,28 +47,32 @@ def read_email(username, password, host, port):
   print(f"Nội dung của email thứ {choice}:")
   print ("Date: ", data_email['Date'])
   print ("To: ", " ".join(data_email['To']))
-  print ("Cc: ", " ".join(data_email['Cc']))
+  if len(data_email["Cc"]) != 0:
+    print ("Cc: ", " ".join(data_email['Cc']))
   print ("From: ",data_email['From'])
   print ("Subject: ", data_email['Subject'])
   print ("Content: ", data_email['Content'])
   update_status(foldername, choice)
 
-  if data_email['Attachment'] != []:
-    opt = input("Trong email này có chứa " + str(len(data_email['Attachment'])) + " attached file, nhập 1 để save, nhập 0 để tiếp tục: ")
-    if opt == '1':
-      print("Sau đây là các attached file:")
-      for i in range(len(data_email['Attachment'])):
-        print(str(i + 1) + ".", data_email['Attachment'][i]['name'])
-      if len(data_email['Attachment']) > 1:
-        print(str(len(data_email['Attachment']) + 1) + ". All")
-      saved_file = input("Nhập số tương ứng với file bạn muốn lưu: ")
-      saved_path = input("Cho biết đường dẫn bạn muốn lưu: ")
-      if (int(saved_file) == len(data_email['Attachment']) + 1):
-        for i in range(0, len(data_email["Attachment"])):
-          save_attachment(data_email, i, saved_path)  #i - 1: là index trong data_email['Attachment]
-      else:
-        save_attachment(data_email, int(saved_file) - 1, saved_path)
-  client.close()
+  try:
+    if data_email['Attachment'] != []:
+      opt = input("Trong email này có chứa " + str(len(data_email['Attachment'])) + " attached file, nhập 1 để save, nhập 0 để tiếp tục: ")
+      if opt == '1':
+        print("Sau đây là các attached file:")
+        for i in range(len(data_email['Attachment'])):
+          print(str(i + 1) + ".", data_email['Attachment'][i]['name'])
+        if len(data_email['Attachment']) > 1:
+          print(str(len(data_email['Attachment']) + 1) + ". All")
+        saved_file = input("Nhập số tương ứng với file bạn muốn lưu: ")
+        saved_path = input("Cho biết đường dẫn bạn muốn lưu: ")
+        if (int(saved_file) == len(data_email['Attachment']) + 1):
+          for i in range(0, len(data_email["Attachment"])):
+            save_attachment(data_email, i, saved_path)  #i - 1: là index trong data_email['Attachment]
+        else:
+          save_attachment(data_email, int(saved_file) - 1, saved_path)
+    client.close()
+  except KeyError:
+    pass
 
 #Lưu file attachment
 def save_attachment(data_email, saved_file, saved_path):

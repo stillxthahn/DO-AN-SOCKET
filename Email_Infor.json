@@ -1,0 +1,128 @@
+[
+  {
+    "Status": 1,
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "test",
+    "Filename": "20231114160114174.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "ABC",
+    "Filename": "20231115120753563.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "ABC",
+    "Filename": "20231115132357646.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "ahihi",
+    "Filename": "20231115142856698.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "ahihi",
+    "Filename": "20231115143929182.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Ta Minh Thu <taminhthunkh@gmail.com>",
+    "Subject": "Test nhieu dong hon",
+    "Filename": "20231115161325970.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Ta Minh Thu <taminhthunkh@gmail.com>",
+    "Subject": "NOName",
+    "Filename": "20231115163957896.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "Test file",
+    "Filename": "20231123131943009.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "Thu Ta Minh",
+    "Filename": "20231123143204483.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "urgent BABE",
+    "Filename": "20231123193811892.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "ABC",
+    "Filename": "20231123194323172.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Ta Minh Thu <taminhthunkh@gmail.com>",
+    "Subject": "hic",
+    "Filename": "20231123194754055.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "testjson",
+    "Filename": "20231123203700444.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "test file attachment",
+    "Filename": "20231126125328349.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "aaa",
+    "Filename": "20231126151946067.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "123",
+    "Filename": "20231126162746756.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "test path",
+    "Filename": "20231126163058436.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "1",
+    "Filename": "20231126163150865.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "2",
+    "Filename": "20231126163230746.msg"
+  },
+  {
+    "Status": "0",
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "TESST 3",
+    "Filename": "20231126173329401.msg"
+  },
+  {
+    "Status": 1,
+    "From": "Mang may tinh <example@example.com>",
+    "Subject": "aaaaaaaaaaa",
+    "Filename": "20231126173831484.msg"
+  }
+]
