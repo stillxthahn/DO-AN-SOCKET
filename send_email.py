@@ -84,6 +84,7 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
   for path in file_path:
     with open(path, 'rb') as attachment:
       attachment_part = MIMEApplication(attachment.read())
+      #path = path.decode('utf-8')
       file_type = mimetypes.guess_type(path)
       file_name = path[path.rfind("\\") + 1:len(path)]
       attachment_part.set_type(str(file_type[0]), header='Content-Type')
@@ -91,7 +92,7 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
       msg.attach(attachment_part)
   return msg.as_bytes()
 
-
+#C:\Users\LENOVO\OneDrive\Máy tính\img.png
 def send_email(username, emailFrom, host, port):
   #CREATE SOCKET OBJECT AND CONNECT TO SERVER
   client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

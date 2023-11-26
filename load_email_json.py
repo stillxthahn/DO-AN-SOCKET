@@ -1,11 +1,3 @@
-'''
-#import socket
-import extract_msg
-
-def displayEmail_Infor(LIST):
-    for i in LIST:
-'''
-import os
 import json
 
 def load_email_json(data_parse, filename):

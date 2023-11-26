@@ -2,12 +2,12 @@ import json
 import os
 from read_json_file import read_json_file
 
-def getFiles_arr(foldername):
+def get_files_arr(foldername):
     return os.listdir(os.path.join(os.getcwd(), "local_mailbox", foldername))[::-1]
 
 def output_receive_list(foldername):
     while True:
-        files_arr = getFiles_arr(foldername)
+        files_arr = get_files_arr(foldername)
         if not files_arr:
             print("Thư mục bạn chọn không có email nào!")
             foldername = folder_choice(0)
@@ -40,7 +40,7 @@ def get_valid_choice(files_arr):
 
 def read_chosen_file(foldername, choice):
     folder_path = os.path.join(os.getcwd(), "local_mailbox", foldername)
-    files_arr = getFiles_arr(foldername)
+    files_arr = get_files_arr(foldername)
     file_path = os.path.join(folder_path, files_arr[choice-1])
 
     with open(file_path) as msgfile:
@@ -48,7 +48,7 @@ def read_chosen_file(foldername, choice):
 
 
 def update_status(foldername, choice):
-    files_arr = getFiles_arr(foldername)
+    files_arr = get_files_arr(foldername)
     if 1 <= int(choice) <= len(files_arr):
         selected_email_file = files_arr[int(choice) - 1]
         listjson = read_json_file('Email_Infor.json')
