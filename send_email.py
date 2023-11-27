@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 import mimetypes
-
+import os
 def send_command(client, command):
   try:
     client.send(command.encode())
@@ -83,10 +83,10 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
   for path in file_path:
     with open(path, 'rb') as attachment:
       attachment_part = MIMEApplication(attachment.read())
-      file_type = mimetypes.guess_type(path)
-      print(file_type)
+      file_type = path[path.rfind('.') + 1:] + "/None"
       file_name = path[path.rfind("\\") + 1:len(path)]
-      attachment_part.set_type(str(file_type[0]), header='Content-Type')
+      #file_type = mimetypes.guess_type(path)
+      attachment_part.set_type(file_type, header='Content-Type')
       attachment_part.add_header("Content-Disposition", "attachment",filename=file_name)
       msg.attach(attachment_part)
   return msg.as_bytes()
