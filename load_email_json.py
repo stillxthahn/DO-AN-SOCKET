@@ -6,17 +6,16 @@ def load_email_json(data_parse, filename):
     dataEnroll['From'] = data_parse['From']
     dataEnroll['Subject'] = data_parse['Subject']
     dataEnroll['Filename'] = filename
-
     try:
-        f = open('Email_Infor.json', "r")
+        f = open('email_infor.json', "r")
         data = json.load(f)
         f.close()
         data.append(dataEnroll)
-        f = open('Email_Infor.json', 'w')
+        f = open('email_infor.json', 'w')
         f.write(json.dumps(data))
         f.close()
     except Exception as FileNotFoundError:
-        f = open('Email_Infor.json', 'w')
+        f = open('email_infor.json', 'w')
         data = []
         data.append(dataEnroll)
         f.write(json.dumps(data))

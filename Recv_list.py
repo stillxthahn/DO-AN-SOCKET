@@ -13,7 +13,7 @@ def output_receive_list(foldername):
             foldername = folder_choice(0)
         else:
             break
-    listjson = read_json_file('Email_Infor.json')
+    listjson = read_json_file('email_infor.json')
     for i in range(len(files_arr)):
         print(i + 1, end=' ')
         for j in range(len(listjson)):
@@ -51,17 +51,17 @@ def update_status(foldername, choice):
     files_arr = get_files_arr(foldername)
     if 1 <= int(choice) <= len(files_arr):
         selected_email_file = files_arr[int(choice) - 1]
-        listjson = read_json_file('Email_Infor.json')
+        listjson = read_json_file('email_infor.json')
         for i in range(len(listjson)):
             if listjson[i]["Filename"] == selected_email_file:
                 try:
-                    with open("Email_Infor.json", 'r') as fileread:
+                    with open("email_infor.json", 'r') as fileread:
                         list = json.load(fileread)
                 except FileNotFoundError:
                     print ("Khong the mo file!")
                 list[i]["Status"] = 1
                 try:
-                    with open('Email_Infor.json', 'w') as filewrite:
+                    with open('email_infor.json', 'w') as filewrite:
                         json.dump(list,filewrite,indent = 2)
                 except FileNotFoundError:
                     print ("Khong the mo file!")

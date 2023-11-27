@@ -43,11 +43,12 @@ def read_email(username, password, host, port):
   choice = get_valid_choice(files_arr)
   email_data = read_chosen_file(foldername, choice)
   data_email = parse_email(email_data, '\n')
+  print(data_email["Cc"])
 
   print(f"Nội dung của email thứ {choice}:")
   print ("Date: ", data_email['Date'])
   print ("To: ", " ".join(data_email['To']))
-  if len(data_email["Cc"]) != 0:
+  if data_email["Cc"] != ['']:
     print ("Cc: ", " ".join(data_email['Cc']))
   print ("From: ",data_email['From'])
   print ("Subject: ", data_email['Subject'])
