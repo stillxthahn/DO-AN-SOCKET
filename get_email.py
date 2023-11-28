@@ -36,7 +36,6 @@ def parse_email(data, spliter):
       break
   if (boundary == ""):
     for i in range(start_idx_attach, len(lines)):
-      print("LINES[i]", lines[i])
       content = content + lines[i] + '\n'
     content = content[1:content.rfind('.') - 2]
     return {"ID": message_id, "Date": date, "To": tos, "Cc": ccs, "From": _from, "Subject": subject, "Content": content}

@@ -93,7 +93,7 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
   msg['Message-ID'] = f"{uuid.uuid4()}@example.com"
   msg['Date'] = f"{local_time} +0700"
   msg['To'] = "".join(to)
-  if cc != '' :
+  if len(cc):
     msg['Cc'] = "".join(cc)
   msg['From'] = f"{username} <{emailfrom}>"
   msg['Subject'] = "".join(subject)

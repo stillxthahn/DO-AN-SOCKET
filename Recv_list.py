@@ -70,7 +70,7 @@ def update_status(foldername, choice):
                     print ("Khong the mo file!")
 def input_folder():
     while True:
-        folder = input("Bạn muốn xem email trong folder nào: ")
+        folder = input("Bạn muốn xem email trong folder nào (nhấn Enter để thoát): ")
         try:
             if ('1' <= folder <= '5'):
                 return folder
