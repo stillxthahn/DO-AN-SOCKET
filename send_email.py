@@ -1,6 +1,7 @@
 import socket
 import uuid
 import time
+import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
@@ -12,6 +13,22 @@ def send_command(client, command):
   except Exception as e:
     print(f"Lỗi: {e}")
     return ""
+
+
+def check_file(path):
+  try:
+    data = os.path.getsize(path)
+    if (data / (1024 * 1024) > 3):
+      print("Dung lượng File quá lớn, vui lòng nhập lại!")
+      return False
+    return True
+  except FileNotFoundError:
+    print("File không tồn tại, vui lòng nhập lại!")
+    return False
+  except Exception as e:
+    print(f"Lỗi {e}, vui lòng nhập lại!")
+    return False;
+
 
 def input_email():
   tos_list = []
@@ -44,8 +61,11 @@ def input_email():
       num_files = input("Số lượng file muốn gửi: ")
       num_files = int(num_files)
       for num in range(1, num_files + 1):
-        attachment_path = input(f"Nhập đường dẫn file đính kèm cho file {num}: ")
-        file_path.append(attachment_path)
+        while True:
+          attachment_path = input(rf"Nhập đường dẫn file đính kèm cho file {num}: ")
+          if (check_file(attachment_path) == True):
+            file_path.append(attachment_path)
+            break
       break
     elif (attach_files == "2"): break
     else: print("Lựa chọn không hợp lệ, bạn hãy nhập lại")
