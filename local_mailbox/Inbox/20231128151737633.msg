@@ -1,3 +1,0 @@
-b'Content-Type: multipart/mixed; boundary="===============5555948676092148510=="\nMIME-Version: 1.0\nMessage-ID: 263592c2-6897-4008-a6a6-bf5718f54b57@example.com\nDate: Tue, 28 Nov 2023 15:17:37 +0700\nTo: example@example.com\nCc: \nFrom: Mang may tinh <example@example.com>\nSubject: 123\n\n--===============5555948676092148510==\nContent-Type: text/plain; charset="us-ascii"\nMIME-Version: 1.0\nContent-Transfer-Encoding: 7bit\n\n123\n--===============5555948676092148510==\nContent-Transfer-Encoding: base64\nMIME-Version: 1.0\nContent-Type: txt/None\nContent-Disposition: attachment; filename="input.txt"\n\nYTthYWFzZGFkYXNkYWRhc2RhZGFzZGFka3ZqZnNkbGt2anNkbGZ2a2phd2Vpb3JqYWVmamF3b2ll\ndmphdm5ka25jYXNsZGtmanNhbGZr\n\n--===============5555948676092148510==--\n'
-.
-
