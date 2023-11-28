@@ -1,6 +1,9 @@
 import os
 from read_json_file import read_json_file
-from load_email_json import load_email_json
+from save_email_json import save_email_json
+JSON_FILTER = read_json_file('filter.json')
+BUFF_SIZE = 4096
+
 def parse_email(data, spliter):
   lines = data.split(spliter)
   boundary = ""
@@ -46,7 +49,11 @@ def parse_email(data, spliter):
           content = content + lines[k]
       elif lines[j].startswith("Content-Disposition: attachment"):
         attachment_data = ""
-        file_name = lines[j][lines[j].find('"') + 1:len(lines[j]) - 1]
+        file_name = ""
+        if (lines[j].find("filename") != -1):
+          file_name = lines[j][lines[j].find('"') + 1:len(lines[j]) - 1]
+        else:
+          file_name = lines[j + 1][lines[j + 1].find('"') + 1:len(lines[j + 1])- 1]
         for k in range(j + 2, len(lines)):
           if boundary in lines[k]:
             break
@@ -56,7 +63,7 @@ def parse_email(data, spliter):
         attachment_arr.append(attachment)
     return {"ID": message_id, "Date": date, "To": tos, "Cc": ccs, "From": _from, "Subject": subject, "Content": content, "Attachment": attachment_arr}
     
-def save_file(data, filename, foldername):
+def save_email_msg(data, filename, foldername):
   file_path = os.path.join(os.getcwd(),"local_mailbox", foldername, filename)
   data_arr = data.split('\r\n')
   with open(file_path, "w") as f:
@@ -65,21 +72,32 @@ def save_file(data, filename, foldername):
       f.write(item)
 
 
-def save_email(data, filename, filter):
+def filtering_email(data, filename):
   data_parse = parse_email(data, '\r\n')
-  save_file(data, filename, "Inbox")
-  load_email_json(data_parse, filename)
-  for object in filter:
+  save_email_json(data_parse, filename)
+  check_filter = False
+  for object in JSON_FILTER:
     for category in object["type"]:
       for value in object["value"]:
         if (value in data_parse[category]):    
-          save_file(data, filename, object["folder"])
+          save_email_msg(data, filename, object["folder"])
+          check_filter = True
+  if not check_filter:
+    save_email_msg(data, filename, "Inbox")
+
+def check_existed_file(filename):
+  mail_folder = os.path.join(os.getcwd(), "local_mailbox")
+  list_folder = os.listdir(mail_folder)
+  for folder in list_folder:
+    mails_in_folder = os.listdir(os.path.join(mail_folder, folder))
+    if filename in mails_in_folder:
+      return True
+  return False
 
 def get_email(client, list):
-  BUFF_SIZE = 4096
-  json_filter = read_json_file('filter.json')
-  folder_inbox_path = os.path.join(os.getcwd(),"local_mailbox", "Inbox")
   for i in range(1, len(list) + 1):
+      if (check_existed_file(list[i - 1]) == True):
+        continue
       client.send(f"RETR {i}\r\n".encode())
       data_server = b""
       while True:
@@ -88,10 +106,8 @@ def get_email(client, list):
         if len(chunk) < BUFF_SIZE:
           break
       data_server = data_server.decode()
-      if (os.path.isfile(os.path.join(folder_inbox_path, list[i - 1]))): 
-        continue
       data_server = data_server[data_server.find('\n') + 1:]
-      save_email(data_server, list[i - 1], json_filter)
+      filtering_email(data_server, list[i - 1])
 
 
 # data = parse_email(data_file)

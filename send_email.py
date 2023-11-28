@@ -84,7 +84,7 @@ def body_format(tos_list, ccs_list, username, emailFrom, subject, content):
     from_ = f"""From: {username} <{emailFrom}>\r\n"""
     subject = f"""Subject: {subject}\r\n\r\n"""
     content = f"""{content}\r\n"""
-    endMSG = ".\r\n"
+    endMSG = "\r\n.\r\n"
     return messageID + date + to + cc + from_ + subject + content + endMSG
 
 def body_format_attachment(to, cc, username, emailfrom, subject, content, file_path):

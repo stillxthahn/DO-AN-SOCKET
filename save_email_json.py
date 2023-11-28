@@ -1,6 +1,6 @@
 import json
 
-def load_email_json(data_parse, filename):
+def save_email_json(data_parse, filename):
     dataEnroll = dict();
     dataEnroll['Status'] = "0"
     dataEnroll['From'] = data_parse['From']
