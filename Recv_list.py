@@ -6,11 +6,13 @@ def get_files_arr(foldername):
     return os.listdir(os.path.join(os.getcwd(), "local_mailbox", foldername))[::-1]
 
 def output_receive_list(foldername):
+
     while True:
         files_arr = get_files_arr(foldername)
         if not files_arr:
             print("Thư mục bạn chọn không có email nào!")
-            foldername = folder_choice(0)
+            folder = input_folder()
+            foldername = ["Inbox", "Project", "Important", "Work", "Spam"][int(folder) - 1]
         else:
             break
     listjson = read_json_file('email_infor.json')
@@ -28,15 +30,16 @@ def output_receive_list(foldername):
 def get_valid_choice(files_arr):
     while True:
         try:
-            choice = int(input("Bạn muốn đọc Email thứ mấy: "))
-            if 1 <= choice <= len(files_arr):
+            choice_str = input("Bạn muốn đọc Email thứ mấy (nhập 0 để xem lại toàn bộ, nhấn Enter để thoát): ")
+            if choice_str == '':
+                return None
+            choice = int(choice_str)
+            if 0 <= choice <= len(files_arr):
                 return choice
             else:
-                print(f"Vui lòng chọn lại ")
+                print("Vui lòng chọn lại hoặc nhập 0 để xem lại toàn bộ.")
         except ValueError:
             print("Vui lòng nhập một số nguyên.")
-
-
 
 def read_chosen_file(foldername, choice):
     folder_path = os.path.join(os.getcwd(), "local_mailbox", foldername)
@@ -65,13 +68,15 @@ def update_status(foldername, choice):
                         json.dump(list,filewrite,indent = 2)
                 except FileNotFoundError:
                     print ("Khong the mo file!")
-def folder_choice(folder):
-    while not (1 <= folder <= 5):
+def input_folder():
+    while True:
+        folder = input("Bạn muốn xem email trong folder nào: ")
         try:
-            folder = int(input("Bạn muốn xem email trong folder nào: "))
-            if not (1 <= folder <= 5):
-                print("Vui lòng chọn từ 1 đến 5.")
+            if ('1' <= folder <= '5'):
+                return folder
+            elif folder == '':
+                return folder
+            else:
+                print("Vui lòng nhập từ 1 -> 5!")
         except ValueError:
             print("Vui lòng nhập một số nguyên.")
-
-    return ["Inbox", "Project", "Important", "Work", "Spam"][folder - 1]
