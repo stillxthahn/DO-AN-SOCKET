@@ -1,7 +1,7 @@
 import socket
 import os
 import base64
-from print_list_email import print_list_email
+#from print_list_email import print_list_email
 from send_email import send_command
 from get_email import get_email
 from recv_list import output_receive_list
@@ -11,6 +11,16 @@ from recv_list import folder_choice
 from recv_list import get_valid_choice
 from recv_list import get_files_arr
 from get_email import parse_email
+
+def print_list_email(data):
+    list = data.split('\r\n')
+    list = list[1:]
+    list = list[:-2]
+    tmp = []
+    for i in range(0, len(list)):
+        list_no_Space = list[i].split(' ')
+        tmp.append(list_no_Space[1])
+    return tmp
 
 def get_list_emails(client, username, password):
   send_command(client, "CAPA\r\n")

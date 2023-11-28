@@ -4,8 +4,6 @@ import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
-import mimetypes
-import os
 def send_command(client, command):
   try:
     client.send(command.encode())
@@ -15,8 +13,14 @@ def send_command(client, command):
     print(f"Lỗi: {e}")
     return ""
 
-
-def input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file_path):
+def input_email():
+  tos_list = []
+  ccs_list = []
+  bccs_list = []
+  subject = ""
+  content = ""
+  num_files = 0
+  file_path = []
   print("Đây là thông tin soạn email: (nếu không điền vui lòng nhấn enter để bỏ qua)")
   to_list_str = input("To: ")
   tos = to_list_str.split(", ")
@@ -32,19 +36,12 @@ def input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file
     bccs = bcc_list_str.split(", ")
     for bcc in bccs:
       bccs_list.append(bcc)
-  sub = input('Subject: ')
-  subject.append(sub)
-  subject = "".join(subject)
-  con = input('Content: ')
-  content.append(con)
-  content = "".join(content)
-
+  subject = input('Subject: ')
+  content = input('Content: ')
   while True:
     attach_files = input("Có gửi kèm file (1. có, 2. không): ")
     if (attach_files == "1"):
-      nums = input("Số lượng file muốn gửi: ")
-      num_files.append(nums)
-      num_files = "".join(num_files)
+      num_files = input("Số lượng file muốn gửi: ")
       num_files = int(num_files)
       for num in range(1, num_files + 1):
         attachment_path = input(f"Nhập đường dẫn file đính kèm cho file {num}: ")
@@ -52,6 +49,7 @@ def input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file
       break
     elif (attach_files == "2"): break
     else: print("Lựa chọn không hợp lệ, bạn hãy nhập lại")
+  return tos_list, ccs_list, bccs_list, subject, content, num_files, file_path
 
 def body_format(tos_list, ccs_list, username, emailFrom, subject, content):
     unique_id = uuid.uuid4()
@@ -64,8 +62,8 @@ def body_format(tos_list, ccs_list, username, emailFrom, subject, content):
     if len(ccs_list):
       cc = f"""Cc: {",".join(ccs_list)}\r\n"""
     from_ = f"""From: {username} <{emailFrom}>\r\n"""
-    subject = f"""Subject: {"".join(subject)}\r\n\r\n"""
-    content = f"""{"".join(content)}\r\n"""
+    subject = f"""Subject: {subject}\r\n\r\n"""
+    content = f"""{content}\r\n"""
     endMSG = ".\r\n"
     return messageID + date + to + cc + from_ + subject + content + endMSG
 
@@ -85,7 +83,6 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
       attachment_part = MIMEApplication(attachment.read())
       file_type = path[path.rfind('.') + 1:] + "/None"
       file_name = path[path.rfind("\\") + 1:len(path)]
-      #file_type = mimetypes.guess_type(path)
       attachment_part.set_type(file_type, header='Content-Type')
       attachment_part.add_header("Content-Disposition", "attachment",filename=file_name)
       msg.attach(attachment_part)
@@ -101,8 +98,7 @@ def send_data(client, host, username, emailFrom, tos_list, ccs_list, bccs_list, 
   for bcc in bccs_list:
     send_command(client, f"RCPT TO:<{bcc}>\r\n")
   send_command(client, f"DATA\r\n")
-  # SENDING-DATA
-  if (len(num_files) == 0  or int(num_files[0]) == 0):
+  if (num_files == 0):
     body = body_format(tos_list, ccs_list, username, emailFrom, subject, content)
     send_command(client, body)
   else:
@@ -119,32 +115,7 @@ def send_email(username, emailFrom, host, port):
   except Exception as e:
      print(f"Lỗi: {e}")
      return
-  
-  tos_list = []
-  ccs_list = []
-  bccs_list = []
-  subject = []
-  content = []
-  num_files = []
-  file_path = []
-  # send_command(client, f"EHLO [{host}]\r\n")
-  # send_command(client, f"MAIL FROM:<{emailFrom}>\r\n")
-  input_email(tos_list, ccs_list, bccs_list, subject, content, num_files, file_path)
+  tos_list, ccs_list, bccs_list, subject, content, num_files, file_path = input_email()
   send_data(client, host, username, emailFrom, tos_list, ccs_list, bccs_list, subject, content, num_files, file_path)
-  # for to in tos_list:
-  #   send_command(client, f"RCPT TO:<{to}>\r\n")
-  # for cc in ccs_list:
-  #   send_command(client, f"RCPT TO:<{cc}>\r\n")
-  # for bcc in bccs_list:
-  #   send_command(client, f"RCPT TO:<{bcc}>\r\n")
-  # send_command(client, f"DATA\r\n")
-  # # SENDING-DATA
-  # if (len(num_files) == 0  or int(num_files[0]) == 0):
-  #   body = body_format(tos_list, ccs_list, username, emailFrom, subject, content)
-  #   send_command(client, body)
-  # else:
-  #   body_attachment = body_format_attachment(",".join(tos_list), ",".join(ccs_list), username, emailFrom, "".join(subject), "".join(content), file_path)
-  #   client.send(body_attachment)
-  #   send_command(client, "\r\n.\r\n")
   print("Đã gửi email thành công")
   client.close()
