@@ -1,7 +1,16 @@
 {
-  "Username": "Mang may tinh",
-  "Email": "example@example.com",
-  "Password": "123",
+  "User": [
+    {
+      "Username": "Mang may tinh",
+      "Email": "example@example.com",
+      "Password": "123"
+    },
+    {
+      "Username": "thanhthiecthu",
+      "Email": "thanhthiecthu@thanhthiecthu.com",
+      "Password": "123"
+    }
+  ],
   "MailServer": "127.0.0.1",
   "SMTP": "2225",
   "POP3": "3335",

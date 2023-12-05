@@ -63,8 +63,8 @@ def parse_email(data, spliter):
         attachment_arr.append(attachment)
     return {"ID": message_id, "Date": date, "To": tos, "Cc": ccs, "From": _from, "Subject": subject, "Content": content, "Attachment": attachment_arr}
     
-def save_email_msg(data, filename, foldername):
-  file_path = os.path.join(os.getcwd(),"local_mailbox", foldername, filename)
+def save_email_msg(data, filename, user_folder, folderfilter):
+  file_path = os.path.join(user_folder, "mailbox", folderfilter, filename)
   data_arr = data.split('\r\n')
   with open(file_path, "w") as f:
     for item in data_arr:
@@ -72,31 +72,31 @@ def save_email_msg(data, filename, foldername):
       f.write(item)
 
 
-def filtering_email(data, filename):
+def filtering_email(data, filename, user_folder):
   data_parse = parse_email(data, '\r\n')
-  save_email_json(data_parse, filename)
+  save_email_json(data_parse, filename, user_folder)
   check_filter = False
   for object in JSON_FILTER:
     for category in object["type"]:
       for value in object["value"]:
         if (value in data_parse[category]):    
-          save_email_msg(data, filename, object["folder"])
+          save_email_msg(data, filename, user_folder, object["folder"])
           check_filter = True
   if not check_filter:
-    save_email_msg(data, filename, "Inbox")
+    save_email_msg(data, filename, user_folder, "Inbox")
 
-def check_existed_file(filename):
-  mail_folder = os.path.join(os.getcwd(), "local_mailbox")
-  list_folder = os.listdir(mail_folder)
+def check_existed_file(filename, mailbox_folder):
+  list_folder = os.listdir(mailbox_folder)
   for folder in list_folder:
-    mails_in_folder = os.listdir(os.path.join(mail_folder, folder))
+    mails_in_folder = os.listdir(os.path.join(mailbox_folder, folder))
     if filename in mails_in_folder:
       return True
   return False
 
-def get_email(client, list):
+def get_email(client, user_folder, list):
+  mailbox_folder = os.path.join(user_folder, "mailbox")
   for i in range(1, len(list) + 1):
-      if (check_existed_file(list[i - 1]) == True):
+      if (check_existed_file(list[i - 1], mailbox_folder) == True):
         continue
       client.send(f"RETR {i}\r\n".encode())
       data_server = b""
@@ -107,10 +107,4 @@ def get_email(client, list):
           break
       data_server = data_server.decode()
       data_server = data_server[data_server.find('\n') + 1:]
-      filtering_email(data_server, list[i - 1])
-
-
-# data = parse_email(data_file)
-# data["ID"]
-# Inbox -> file -> lay ID -> so ID vs json chua doc subject ...
-# chon 1 file -> 
+      filtering_email(data_server, list[i - 1], user_folder)

@@ -21,9 +21,9 @@ def print_list_email(data):
         tmp.append(list_no_Space[1])
     return tmp
 
-def get_list_emails(client, username, password):
+def get_list_emails(client, email, password):
   send_command(client, "CAPA\r\n")
-  send_command(client, f"USER {username}\r\n")
+  send_command(client, f"USER {email}\r\n")
   send_command(client, f"PASS {password}\r\n")
   send_command(client, "STAT\r\n")
   send_command(client, "LIST\r\n")
@@ -31,7 +31,7 @@ def get_list_emails(client, username, password):
   list = print_list_email(uidl_data)
   return list
 
-def read_email(username, password, host, port):
+def read_email(email, password, host, port):
   client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   server_address = (host, port)
   try:
@@ -40,8 +40,20 @@ def read_email(username, password, host, port):
   except Exception as e:
      print(f"Lỗi: {e}")
      return
-  list = get_list_emails(client, username, password)
-  get_email(client, list)
+  
+  user_folder = os.path.join(os.getcwd(), "local_mailbox", email)
+  mail_folder = os.path.join(os.getcwd(), "local_mailbox", email, "mailbox")
+  try:
+    os.makedirs(mail_folder)
+    os.makedirs(os.path.join(mail_folder, "Inbox"))
+    os.makedirs(os.path.join(mail_folder, "Project"))
+    os.makedirs(os.path.join(mail_folder, "Work"))
+    os.makedirs(os.path.join(mail_folder, "Spam"))
+    os.makedirs(os.path.join(mail_folder, "Important"))
+  except FileExistsError as e:
+    pass
+  list = get_list_emails(client, email, password)
+  get_email(client, user_folder, list)
 
   while True:
     print("Đây là danh sách các folder trong mailbox của bạn: \r\n 1. Inbox \r\n 2. Project\r\n 3. Important \r\n 4. Work \r\n 5. Spam")
@@ -50,8 +62,8 @@ def read_email(username, password, host, port):
         return
     foldername = ["Inbox", "Project", "Important", "Work", "Spam"][int(folder) - 1]
     print(f"Bạn chọn thư mục {foldername}")
-    foldername = output_receive_list(foldername)
-    files_arr = get_files_arr(foldername)
+    foldername = output_receive_list(user_folder, foldername)
+    files_arr = get_files_arr(mail_folder, foldername)
 
     while True:
         choice = get_valid_choice(files_arr)
@@ -60,7 +72,8 @@ def read_email(username, password, host, port):
         elif choice == 0:
             break
         else:
-            email_data = read_chosen_file(foldername, choice)
+            folder_path = os.path.join(mail_folder, foldername)
+            email_data = read_chosen_file(folder_path, choice)
             data_email = parse_email(email_data, '\n')
             print(f"Nội dung của email thứ {choice}:")
             print ("Date: ", data_email['Date'])
@@ -70,7 +83,7 @@ def read_email(username, password, host, port):
             print ("From: ",data_email['From'])
             print ("Subject: ", data_email['Subject'])
             print ("Content: ", data_email['Content'])
-            update_status(foldername, choice)
+            update_status(user_folder, folder_path, choice)
             try:
                 if data_email['Attachment'] != []:
                     opt = input("Trong email này có chứa " + str(len(data_email['Attachment'])) + " attached file, nhập 1 để save, nhập 0 để tiếp tục: ")
