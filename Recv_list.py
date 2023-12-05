@@ -19,7 +19,7 @@ def output_receive_list(user_folder, foldername):
             break
     listjson = read_json_file(os.path.join(user_folder, 'email_infor.json'))
     for i in range(len(files_arr)):
-        print(i + 1, end=' ')
+        print(i + 1, end='. ')
         for j in range(len(listjson)):
             if listjson[j]["Filename"] == files_arr[i]:
                 if listjson[j]["Status"] == '0':
