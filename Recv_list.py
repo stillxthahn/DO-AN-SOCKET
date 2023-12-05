@@ -12,6 +12,8 @@ def output_receive_list(user_folder, foldername):
         if not files_arr:
             print("Thư mục bạn chọn không có email nào!")
             folder = input_folder()
+            if folder == '':
+                return None
             foldername = ["Inbox", "Project", "Important", "Work", "Spam"][int(folder) - 1]
         else:
             break

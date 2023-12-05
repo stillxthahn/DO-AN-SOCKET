@@ -40,7 +40,7 @@ def read_email(email, password, host, port):
   except Exception as e:
      print(f"Lỗi: {e}")
      return
-  
+
   user_folder = os.path.join(os.getcwd(), "local_mailbox", email)
   mail_folder = os.path.join(os.getcwd(), "local_mailbox", email, "mailbox")
   try:
@@ -58,11 +58,13 @@ def read_email(email, password, host, port):
   while True:
     print("Đây là danh sách các folder trong mailbox của bạn: \r\n 1. Inbox \r\n 2. Project\r\n 3. Important \r\n 4. Work \r\n 5. Spam")
     folder = input_folder()
-    if folder == '':
+    if folder is None:
         return
     foldername = ["Inbox", "Project", "Important", "Work", "Spam"][int(folder) - 1]
     print(f"Bạn chọn thư mục {foldername}")
     foldername = output_receive_list(user_folder, foldername)
+    if foldername == None:
+        break
     files_arr = get_files_arr(mail_folder, foldername)
 
     while True:
