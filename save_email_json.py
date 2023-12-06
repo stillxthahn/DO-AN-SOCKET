@@ -15,7 +15,7 @@ def save_email_json(data_parse, filename, user_folder):
         f = open(json_file_path, 'w')
         f.write(json.dumps(data))
         f.close()
-    except Exception as FileNotFoundError:
+    except FileNotFoundError:
         f = open(json_file_path, 'w')
         data = []
         data.append(dataEnroll)

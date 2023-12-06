@@ -56,12 +56,12 @@ def read_email(email, password, host, port):
   get_email(client, user_folder, list)
 
   while True:
-    print("Đây là danh sách các folder trong mailbox của bạn: \r\n 1. Inbox \r\n 2. Project\r\n 3. Important \r\n 4. Work \r\n 5. Spam")
+    print("\r\nĐây là danh sách các folder trong mailbox của bạn: \r\n 1. Inbox \r\n 2. Project\r\n 3. Important \r\n 4. Work \r\n 5. Spam")
     folder = input_folder()
-    if folder is None:
+    if folder == '':
         return
     foldername = ["Inbox", "Project", "Important", "Work", "Spam"][int(folder) - 1]
-    print(f"Bạn chọn thư mục {foldername}")
+    print(f"\r\nBạn chọn thư mục {foldername}")
     foldername = output_receive_list(user_folder, foldername)
     if foldername == None:
         break

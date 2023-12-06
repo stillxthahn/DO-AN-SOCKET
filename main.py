@@ -30,17 +30,17 @@ def client_login():
         if (password_input != check_password):
             print("Mật khẩu không chính xác, vui lòng nhập lại")
             continue
+        print("Đăng nhập thành công!")
         return username, email_input, password_input;
 
 
 username, email, password = client_login()
 
 while True:
-    print("Đăng nhập thành công!")
-    print("Vui lòng chọn Menu:\r\n")
-    print("1. Để gửi email\r\n")
-    print("2. Để xem danh sách các email đã nhận\r\n")
-    print("3. Thoát\r\n")
+    print("\r\nVui lòng chọn Menu:")
+    print("1. Để gửi email")
+    print("2. Để xem danh sách các email đã nhận")
+    print("3. Thoát")
     choice = input("Bạn chọn: ")
     autoload = threading.Thread(target=thread_load_email, daemon=True, args=(HOST, RECV_PORT, email, password, choice, int(AUTOLOAD)))
     if (choice == "1"):

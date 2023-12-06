@@ -39,7 +39,7 @@ def input_email():
   content = ""
   num_files = 0
   file_path = []
-  print("Đây là thông tin soạn email: (nếu không điền vui lòng nhấn enter để bỏ qua)")
+  print("\r\nĐây là thông tin soạn email: (nếu không điền vui lòng nhấn enter để bỏ qua)")
   to_list_str = input("To: ")
   tos = to_list_str.split(", ")
   for to in tos:
