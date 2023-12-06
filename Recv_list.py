@@ -32,7 +32,7 @@ def output_receive_list(user_folder, foldername):
 def get_valid_choice(files_arr):
     while True:
         try:
-            choice_str = input("Bạn muốn đọc Email thứ mấy (nhập 0 để xem lại toàn bộ, nhấn Enter để thoát): ")
+            choice_str = input("Bạn muốn đọc Email thứ mấy (nhập 0 để xem lại toàn bộ, nhấn Enter để quay lại Menu): ")
             if choice_str == '':
                 return None
             choice = int(choice_str)
@@ -70,7 +70,7 @@ def update_status(user_folder, folder_path, choice):
                     print ("Khong the mo file!")
 def input_folder():
     while True:
-        folder = input("Bạn muốn xem email trong folder nào (nhấn Enter để thoát): ")
+        folder = input("Bạn muốn xem email trong folder nào (nhấn Enter để quay lại Menu): ")
         try:
             if ('1' <= folder <= '5'):
                 return folder

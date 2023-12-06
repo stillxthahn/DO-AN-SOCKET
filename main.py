@@ -46,10 +46,10 @@ if __name__ == "__main__":
             autoload = threading.Thread(target=thread_load_email, daemon=True, args=(HOST, RECV_PORT, email, password, choice, int(AUTOLOAD)))
             autoload.start()
         if (choice == "1"):
-            print("NUM:", threading.active_count())
             send_email(username, email, HOST, SEND_PORT)    
         elif (choice == "2"):
             print("NUM:", threading.active_count())
             read_email(email, password, HOST, RECV_PORT)
         elif (choice == "3"):
+            print("THOÁT THÀNH CÔNG!")
             exit(0)
