@@ -88,20 +88,18 @@ def read_email(email, password, host, port):
             update_status(user_folder, folder_path, choice)
             try:
                 if data_email['Attachment'] != []:
-                    opt = input("Trong email này có chứa " + str(len(data_email['Attachment'])) + " attached file, nhập 1 để save, nhập 0 để tiếp tục: ")
-                if opt == '1':
-                    print("Sau đây là các attached file:")
+                    print("Trong email này có chứa " + str(len(data_email['Attachment'])) + " attached file:")
                     for i in range(len(data_email['Attachment'])):
                         print(str(i + 1) + ".", data_email['Attachment'][i]['name'])
-                    if len(data_email['Attachment']) > 1:
-                        print(str(len(data_email['Attachment']) + 1) + ". All")
-                    saved_file = input("Nhập số tương ứng với file bạn muốn lưu: ")
-                    saved_path = input("Cho biết đường dẫn bạn muốn lưu: ")
-                    if (int(saved_file) == len(data_email['Attachment']) + 1):
-                        for i in range(0, len(data_email["Attachment"])):
-                            save_attachment(data_email, i, saved_path)  #i - 1: là index trong data_email['Attachment]
-                    else:
-                        save_attachment(data_email, int(saved_file) - 1, saved_path)
+                    opt = input("Nhập '1' để lưu attached file, nhập '0' để tiếp tục: ")
+                    if opt == '1':
+                        saved_file = input("Nhập số thứ tự tương ứng với file bạn muốn lưu hoặc nhập '" + str(len(data_email['Attachment']) + 1) + "' để lưu tất cả các attached file: ")
+                        saved_path = input("Cho biết đường dẫn bạn muốn lưu: ")
+                        if (int(saved_file) == len(data_email['Attachment']) + 1):
+                            for i in range(0, len(data_email['Attachment'])):
+                                save_attachment(data_email, i, saved_path)  #i - 1: là index trong data_email['Attachment]
+                        else:
+                            save_attachment(data_email, int(saved_file) - 1, saved_path)
                 client.close()
             except KeyError:
                 pass

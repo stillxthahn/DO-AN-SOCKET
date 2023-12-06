@@ -9,6 +9,16 @@
       "Username": "thanhthiecthu",
       "Email": "thanhthiecthu@thanhthiecthu.com",
       "Password": "123"
+    },
+    {
+      "Username": "Email test 1",
+      "Email": "ahihi@testing.com",
+      "Password": "123"
+    },
+    {
+      "Username": "Email test 2",
+      "Email": "ahuu@testing.com",
+      "Password": "123"
     }
   ],
   "MailServer": "127.0.0.1",
