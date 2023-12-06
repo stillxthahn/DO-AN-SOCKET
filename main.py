@@ -18,7 +18,6 @@ def client_login():
         password_input = input("Mật khẩu: ")
         check_email = False
         check_password = ''
-        check_username = ''
         for user in USER:
             if (email_input == user["Email"]):
                 check_email = True

@@ -44,7 +44,6 @@ def get_valid_choice(files_arr):
             print("Vui lòng nhập một số nguyên.")
 
 def read_chosen_file(folder_path, choice):
-    # files_arr = get_files_arr(folder_path)
     files_arr = os.listdir(folder_path)[::-1]
     file_path = os.path.join(folder_path, files_arr[choice-1])
     with open(file_path) as msgfile:

@@ -2,6 +2,7 @@ import socket
 import uuid
 import time
 import os
+import base64
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
@@ -54,7 +55,9 @@ def input_email():
     for bcc in bccs:
       bccs_list.append(bcc)
   subject = input('Subject: ')
+  subject = base64.b64encode(subject.encode("utf8")).decode("utf8")
   content = input('Content: ')
+  content = base64.b64encode(content.encode("utf8")).decode("utf8")
   while True:
     attach_files = input("Có gửi kèm file (1. có, 2. không): ")
     if (attach_files == "1"):
@@ -103,6 +106,7 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
       attachment_part = MIMEApplication(attachment.read())
       file_type = path[path.rfind('.') + 1:] + "/None"
       file_name = path[path.rfind("\\") + 1:len(path)]
+      file_name = base64.b64encode(file_name.encode("utf8")).decode("utf8")
       attachment_part.set_type(file_type, header='Content-Type')
       attachment_part.add_header("Content-Disposition", "attachment",filename=file_name)
       msg.attach(attachment_part)

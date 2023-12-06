@@ -1,4 +1,5 @@
 import os
+import base64
 from read_json_file import read_json_file
 from save_email_json import save_email_json
 JSON_FILTER = read_json_file('filter.json')
@@ -31,6 +32,7 @@ def parse_email(data, spliter):
     elif lines[i].startswith("From"): _from = lines[i].split(": ", 1)[1]
     elif lines[i].startswith("Subject"): 
       subject = (lines[i].split(": ", 1)[1]).strip()
+      subject = base64.b64decode(subject).decode("utf8")
     if subject != '' and lines[i] == '':
       start_idx_attach = i
       break
@@ -38,6 +40,7 @@ def parse_email(data, spliter):
     for i in range(start_idx_attach, len(lines)):
       content = content + lines[i] + '\n'
     content = content[1:content.rfind('.') - 2]
+    content = base64.b64decode(content).decode("utf8")
     return {"ID": message_id, "Date": date, "To": tos, "Cc": ccs, "From": _from, "Subject": subject, "Content": content}
 
   else:
@@ -47,6 +50,7 @@ def parse_email(data, spliter):
           if boundary in lines[k]:
             break
           content = content + lines[k]
+          content = base64.b64decode(content).decode("utf8")
       elif lines[j].startswith("Content-Disposition: attachment"):
         attachment_data = ""
         file_name = ""
@@ -54,6 +58,7 @@ def parse_email(data, spliter):
           file_name = lines[j][lines[j].find('"') + 1:len(lines[j]) - 1]
         else:
           file_name = lines[j + 1][lines[j + 1].find('"') + 1:len(lines[j + 1])- 1]
+        file_name = base64.b64decode(file_name).decode("utf8")
         for k in range(j + 2, len(lines)):
           if boundary in lines[k]:
             break
