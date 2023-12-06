@@ -29,6 +29,8 @@ def auto_load_email(host, port, email, password):
   get_email(client, user_folder, list)
   
 def thread_load_email(host, port, email, password, choice, _time):
-    while choice != 3:
-        time.sleep(_time)
-        auto_load_email(host, port, email, password)
+  while True:
+    time.sleep(_time)
+    auto_load_email(host, port, email, password)
+    
+    

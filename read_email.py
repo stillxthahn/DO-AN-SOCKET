@@ -25,8 +25,6 @@ def get_list_emails(client, email, password):
   send_command(client, "CAPA\r\n")
   send_command(client, f"USER {email}\r\n")
   send_command(client, f"PASS {password}\r\n")
-  send_command(client, "STAT\r\n")
-  send_command(client, "LIST\r\n")
   uidl_data = send_command(client, "UIDL\r\n")
   list = print_list_email(uidl_data)
   return list

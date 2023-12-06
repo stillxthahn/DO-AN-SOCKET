@@ -31,25 +31,25 @@ def client_login():
             print("Mật khẩu không chính xác, vui lòng nhập lại")
             continue
         print("Đăng nhập thành công!")
-        return username, email_input, password_input;
+        return username, email_input, password_input
 
 
-username, email, password = client_login()
-
-while True:
-    print("\r\nVui lòng chọn Menu:")
-    print("1. Để gửi email")
-    print("2. Để xem danh sách các email đã nhận")
-    print("3. Thoát")
-    choice = input("Bạn chọn: ")
-    autoload = threading.Thread(target=thread_load_email, daemon=True, args=(HOST, RECV_PORT, email, password, choice, int(AUTOLOAD)))
-    if (choice == "1"):
+if __name__ == "__main__":
+    username, email, password = client_login()
+    while True:
+        print("\r\nVui lòng chọn Menu:")
+        print("1. Để gửi email")
+        print("2. Để xem danh sách các email đã nhận")
+        print("3. Thoát")
+        choice = input("Bạn chọn: ")
         if (threading.active_count() == 1):
+            autoload = threading.Thread(target=thread_load_email, daemon=True, args=(HOST, RECV_PORT, email, password, choice, int(AUTOLOAD)))
             autoload.start()
-        send_email(username, email, HOST, SEND_PORT)    
-    elif (choice == "2"):
-        if (threading.active_count() == 1):
-            autoload.start()
-        read_email(email, password, HOST, RECV_PORT)
-    elif (choice == "3"):
-        exit(0)
+        if (choice == "1"):
+            print("NUM:", threading.active_count())
+            send_email(username, email, HOST, SEND_PORT)    
+        elif (choice == "2"):
+            print("NUM:", threading.active_count())
+            read_email(email, password, HOST, RECV_PORT)
+        elif (choice == "3"):
+            exit(0)
