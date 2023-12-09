@@ -31,10 +31,11 @@ def auto_load_email(host, port, email, password):
 def thread_load_email(host, port, email, password, event, _time):
   while True:
     if (event.is_set()):
-      print("Đang đăng xuất")
       break
-    time.sleep(_time)
+    for i in range(_time):
+      if (event.is_set()):
+        break
+      time.sleep(1)
     auto_load_email(host, port, email, password)
-  print("Đăng xuất thành công")
     
     

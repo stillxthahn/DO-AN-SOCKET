@@ -62,5 +62,8 @@ if __name__ == "__main__":
                 read_email(email, password, HOST, RECV_PORT)
             elif (choice == "3"):
                 event.set()
+                print("Đang đăng xuất")
                 autoload.join()
                 break
+        print("Đăng xuất thành công")
+    
