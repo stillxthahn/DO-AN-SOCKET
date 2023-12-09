@@ -131,6 +131,7 @@ def send_data(client, host, username, emailFrom, tos_list, ccs_list, bccs_list, 
     send_command(client, "\r\n.\r\n")
 
 def send_email(username, emailFrom, host, port):
+  tos_list, ccs_list, bccs_list, subject, content, num_files, file_path = input_email()
   client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   server_address = (host, port)
   try:
@@ -139,7 +140,6 @@ def send_email(username, emailFrom, host, port):
   except Exception as e:
      print(f"Lỗi: {e}")
      return
-  tos_list, ccs_list, bccs_list, subject, content, num_files, file_path = input_email()
   send_data(client, host, username, emailFrom, tos_list, ccs_list, bccs_list, subject, content, num_files, file_path)
   print("Đã gửi email thành công")
   client.close()

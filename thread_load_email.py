@@ -27,10 +27,14 @@ def auto_load_email(host, port, email, password):
     pass
   list = get_list_emails(client, email, password)
   get_email(client, user_folder, list)
-  
-def thread_load_email(host, port, email, password, choice, _time):
+
+def thread_load_email(host, port, email, password, event, _time):
   while True:
+    if (event.is_set()):
+      print("Đang đăng xuất")
+      break
     time.sleep(_time)
     auto_load_email(host, port, email, password)
+  print("Đăng xuất thành công")
     
     

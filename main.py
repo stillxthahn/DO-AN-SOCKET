@@ -35,21 +35,32 @@ def client_login():
 
 
 if __name__ == "__main__":
-    username, email, password = client_login()
     while True:
-        print("\r\nVui lòng chọn Menu:")
-        print("1. Để gửi email")
-        print("2. Để xem danh sách các email đã nhận")
-        print("3. Thoát")
+        print("1. Đăng nhập")
+        print("2. Thoát")
         choice = input("Bạn chọn: ")
-        if (threading.active_count() == 1):
-            autoload = threading.Thread(target=thread_load_email, daemon=True, args=(HOST, RECV_PORT, email, password, choice, int(AUTOLOAD)))
-            autoload.start()
-        if (choice == "1"):
-            send_email(username, email, HOST, SEND_PORT)    
-        elif (choice == "2"):
-            print("NUM:", threading.active_count())
-            read_email(email, password, HOST, RECV_PORT)
-        elif (choice == "3"):
-            print("THOÁT THÀNH CÔNG!")
+        if (choice == "2"):
             exit(0)
+        if (choice != "1"):
+            print("Lựa chọn không hợp lệ, vui lòng chọn lại")
+            continue
+        username, email, password = client_login()
+        event = threading.Event()
+        autoload = threading.Thread(target=thread_load_email, daemon=True, args=(HOST, RECV_PORT, email, password, event, int(AUTOLOAD)))
+        if (threading.active_count() == 1):
+            autoload.start()
+        while True:
+            print("\r\nVui lòng chọn Menu:")
+            print("1. Để gửi email")
+            print("2. Để xem danh sách các email đã nhận")
+            print("3. Đăng xuất")
+            choice = input("Bạn chọn: ")
+            
+            if (choice == "1"):
+                send_email(username, email, HOST, SEND_PORT)    
+            elif (choice == "2"):
+                read_email(email, password, HOST, RECV_PORT)
+            elif (choice == "3"):
+                event.set()
+                autoload.join()
+                break
