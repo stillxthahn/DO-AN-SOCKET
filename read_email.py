@@ -77,9 +77,9 @@ def read_email(email, password, host, port):
             data_email = parse_email(email_data, '\n')
             print(f"Nội dung của email thứ {choice}:")
             print ("Date: ", data_email['Date'])
-            print ("To: ", " ".join(data_email['To']))
+            print ("To: ", ", ".join(data_email['To']))
             if len(data_email["Cc"]) != 0:
-                print ("Cc: ", " ".join(data_email['Cc']))
+                print ("Cc: ", ", ".join(data_email['Cc']))
             print ("From: ",data_email['From'])
             print ("Subject: ", data_email['Subject'])
             print ("Content: ", data_email['Content'])
