@@ -1,4 +1,4 @@
-import threading 
+import threading
 from send_email import send_email
 from read_email import read_email
 from thread_load_email import thread_load_email
@@ -55,15 +55,14 @@ if __name__ == "__main__":
             print("2. Để xem danh sách các email đã nhận")
             print("3. Đăng xuất")
             choice = input("Bạn chọn: ")
-            
+
             if (choice == "1"):
-                send_email(username, email, HOST, SEND_PORT)    
+                send_email(username, email, HOST, SEND_PORT)
             elif (choice == "2"):
                 read_email(email, password, HOST, RECV_PORT)
             elif (choice == "3"):
                 event.set()
-                print("Đang đăng xuất")
+                print("Đang đăng xuất...")
                 autoload.join()
                 break
         print("Đăng xuất thành công")
-    
