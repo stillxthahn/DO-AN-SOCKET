@@ -41,18 +41,21 @@ def input_email():
   file_path = []
   print("\r\nĐây là thông tin soạn email: (nếu không điền vui lòng nhấn enter để bỏ qua)")
   to_list_str = input("To: ")
-  tos = to_list_str.split(", ")
+  tos = to_list_str.split(",")
   for to in tos:
+    to = to.strip()
     tos_list.append(to)
   cc_list_str = input("CC: ")
   if (cc_list_str != ''):
-    ccs = cc_list_str.split(", ")
+    ccs = cc_list_str.split(",")
     for cc in ccs:
+      cc = cc.strip()
       ccs_list.append(cc)
   bcc_list_str = input("BCC: ")
   if (bcc_list_str != ''):
-    bccs = bcc_list_str.split(", ")
+    bccs = bcc_list_str.split(",")
     for bcc in bccs:
+      bcc = bcc.strip()
       bccs_list.append(bcc)
   subject = input('Subject: ')
   subject = base64.b64encode(subject.encode("utf8")).decode("utf8")
@@ -80,10 +83,10 @@ def body_format(tos_list, ccs_list, username, emailFrom, subject, content):
     local_time = time.strftime("%a, %d %b %Y %H:%M:%S", named_tuple)
     messageID = f"Message-ID: {unique_id}@example.com\r\n"
     date = f"Date: {local_time} +0700\r\n"
-    to = f"""To: {",".join(tos_list)}\r\n"""
+    to = f"""To: {", ".join(tos_list)}\r\n"""
     cc = ''
     if len(ccs_list):
-      cc = f"""Cc: {",".join(ccs_list)}\r\n"""
+      cc = f"""Cc: {", ".join(ccs_list)}\r\n"""
     from_ = f"""From: {username} <{emailFrom}>\r\n"""
     subject = f"""Subject: {subject}\r\n\r\n"""
     content = f"""{content}\r\n"""
@@ -95,9 +98,9 @@ def body_format_attachment(to, cc, username, emailfrom, subject, content, file_p
   local_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
   msg['Message-ID'] = f"{uuid.uuid4()}@example.com"
   msg['Date'] = f"{local_time} +0700"
-  msg['To'] = "".join(to)
+  msg['To'] = ", ".join(to)
   if len(cc):
-    msg['Cc'] = "".join(cc)
+    msg['Cc'] = ", ".join(cc)
   msg['From'] = f"{username} <{emailfrom}>"
   msg['Subject'] = "".join(subject)
   msg.attach(MIMEText("".join(content), 'plain'))

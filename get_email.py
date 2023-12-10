@@ -17,22 +17,26 @@ def parse_email(data, spliter):
   attachment_arr = []
   content = ""
   start_idx_attach = -1
+  user_agent = ""
 
   for i in range(0, len(lines)):
     if (lines[i].find("Content-Type: multipart/mixed") != -1):
       boundary = lines[0][lines[0].find('"') + 1:len(lines[0]) - 1]
     elif lines[i].startswith("Message-ID"): message_id = lines[i].split(": ", 1)[1]
     elif lines[i].startswith("Date"): date = lines[i].split(": ", 1)[1]
+    elif lines[i].startswith("User-Agent"): user_agent = lines[i].split(": ", 1)[1]
     elif lines[i].startswith("To"): 
       to = lines[i].split(": ", 1)[1]
-      tos = to.split(',')
+      tos = to.split(', ')
     elif lines[i].startswith("Cc"): 
       cc = lines[i].split(": ", 1)[1]
-      ccs = cc.split(',')
-    elif lines[i].startswith("From"): _from = lines[i].split(": ", 1)[1]
+      ccs = cc.split(', ')
+    elif lines[i].startswith("From"): 
+      _from = lines[i].split(": ", 1)[1]
     elif lines[i].startswith("Subject"): 
       subject = (lines[i].split(": ", 1)[1]).strip()
-      subject = base64.b64decode(subject).decode("utf8")
+      if (user_agent == ""):
+        subject = base64.b64decode(subject).decode("utf8")
     if subject != '' and lines[i] == '':
       start_idx_attach = i
       break
@@ -40,7 +44,8 @@ def parse_email(data, spliter):
     for i in range(start_idx_attach, len(lines)):
       content = content + lines[i] + '\n'
     content = content[1:content.rfind('.') - 2]
-    content = base64.b64decode(content).decode("utf8")
+    if (user_agent == ""):
+      content = base64.b64decode(content).decode("utf8")
     return {"ID": message_id, "Date": date, "To": tos, "Cc": ccs, "From": _from, "Subject": subject, "Content": content}
 
   else:
@@ -50,7 +55,8 @@ def parse_email(data, spliter):
           if boundary in lines[k]:
             break
           content = content + lines[k]
-          content = base64.b64decode(content).decode("utf8")
+          if (user_agent == ""):
+            content = base64.b64decode(content).decode("utf8")
       elif lines[j].startswith("Content-Disposition: attachment"):
         attachment_data = ""
         file_name = ""
@@ -58,12 +64,12 @@ def parse_email(data, spliter):
           file_name = lines[j][lines[j].find('"') + 1:len(lines[j]) - 1]
         else:
           file_name = lines[j + 1][lines[j + 1].find('"') + 1:len(lines[j + 1])- 1]
-        file_name = base64.b64decode(file_name).decode("utf8")
+        if (user_agent == ""):
+          file_name = base64.b64decode(file_name).decode("utf8")
         for k in range(j + 2, len(lines)):
           if boundary in lines[k]:
             break
           attachment_data = attachment_data + lines[k]
-        attachment_data.strip()
         attachment = {"name": file_name, "data": attachment_data}
         attachment_arr.append(attachment)
     return {"ID": message_id, "Date": date, "To": tos, "Cc": ccs, "From": _from, "Subject": subject, "Content": content, "Attachment": attachment_arr}
